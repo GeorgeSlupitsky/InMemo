@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ua.slupitsky.inMemo.models.dto.CDForm;
 import ua.slupitsky.inMemo.models.mongo.CD;
 import ua.slupitsky.inMemo.services.CDService;
 import ua.slupitsky.inMemo.sorting.CDComparator;
@@ -15,9 +16,7 @@ import ua.slupitsky.inMemo.validation.exceptions.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -44,8 +43,26 @@ public class CDController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
     @GetMapping("/cds")
-    public Iterable<CD> getCDList(){
-        return cdService.findAllCDs().stream().sorted(new CDComparator()).collect(Collectors.toList());
+    public Iterable<CDForm> getCDList(Locale locale){
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        List<CD> cdListFromDB = cdService.findAllCDs().stream().sorted(new CDComparator()).collect(Collectors.toList());
+        List<CDForm> cds = new ArrayList<>();
+        for (CD cd: cdListFromDB){
+            CDForm cdForm = new CDForm();
+            cdForm.setId(cd.getId());
+            cdForm.setBand(cd.getBand());
+            cdForm.setAlbum(cd.getAlbum());
+            cdForm.setYear(cd.getYear());
+            if (cd.getBooklet().getQuantityOfPages() != 0){
+                cdForm.setBooklet(cd.getBooklet().getQuantityOfPages() + " " + resourceBundle.getString(cd.getBooklet().getName()));
+            } else {
+                cdForm.setBooklet(resourceBundle.getString(cd.getBooklet().getName()));
+            }
+            cdForm.setCountryEdition(resourceBundle.getString(cd.getCountryEdition().getName()));
+            cdForm.setCdType(resourceBundle.getString(cd.getCdType().getName()));
+            cds.add(cdForm);
+        }
+        return cds;
     }
 
     @ApiOperation(value = "Search CD with an ID", response = CD.class)

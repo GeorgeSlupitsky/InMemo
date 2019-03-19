@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ua.slupitsky.inMemo.models.dto.DrumStickForm;
 import ua.slupitsky.inMemo.models.mongo.DrumStick;
 import ua.slupitsky.inMemo.services.DrumStickService;
 import ua.slupitsky.inMemo.utils.ExcelParser;
@@ -17,9 +18,8 @@ import ua.slupitsky.inMemo.validation.exceptions.WrongXlsxFileException;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,8 +45,22 @@ public class DrumStickController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
     @GetMapping(value = "/drumsticks")
-    public Iterable<DrumStick> getDrumStickList(){
-        return drumStickService.findAllDrumSticks();
+    public Iterable<DrumStickForm> getDrumStickList(Locale locale){
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        List<DrumStick> drumSticksFromDB = drumStickService.findAllDrumSticks();
+        List<DrumStickForm> drumSticks = new ArrayList<>();
+        for (DrumStick drumStick: drumSticksFromDB){
+            DrumStickForm drumStickForm = new DrumStickForm();
+            drumStickForm.setId(drumStick.getId());
+            drumStickForm.setBand(drumStick.getBand());
+            drumStickForm.setDrummerName(drumStick.getDrummerName());
+            drumStickForm.setDate(formatter.format(drumStick.getDate()));
+            drumStickForm.setCity(resourceBundle.getString(drumStick.getCity().getName()));
+            drumStickForm.setDescription(resourceBundle.getString(drumStick.getDescription().getName()));
+            drumSticks.add(drumStickForm);
+        }
+        return drumSticks;
     }
 
     @ApiOperation(value = "Search Drum Stick with an ID", response = DrumStick.class)
