@@ -2,13 +2,15 @@ package ua.slupitsky.inMemo.services.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.slupitsky.inMemo.models.dto.CDForm;
 import ua.slupitsky.inMemo.models.enums.CDGroup;
 import ua.slupitsky.inMemo.models.mongo.CD;
 import ua.slupitsky.inMemo.repositories.CDRepository;
 import ua.slupitsky.inMemo.services.CDService;
+import ua.slupitsky.inMemo.sorting.CDComparator;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CDServiceImpl implements CDService {
@@ -21,8 +23,25 @@ public class CDServiceImpl implements CDService {
     }
 
     @Override
-    public List<CD> findAllCDs() {
-        return cdRepository.findAll();
+    public List<CDForm> findAllCDs(ResourceBundle resourceBundle) {
+        List <CD> cdsFromDB = cdRepository.findAll().stream().sorted(new CDComparator()).collect(Collectors.toList());
+        List<CDForm> cds = new ArrayList<>();
+        for (CD cd: cdsFromDB){
+            CDForm cdForm = new CDForm();
+            cdForm.setId(cd.getId());
+            cdForm.setBand(cd.getBand());
+            cdForm.setAlbum(cd.getAlbum());
+            cdForm.setYear(cd.getYear());
+            if (cd.getBooklet().getQuantityOfPages() != 0){
+                cdForm.setBooklet(cd.getBooklet().getQuantityOfPages() + " " + resourceBundle.getString(cd.getBooklet().getName()));
+            } else {
+                cdForm.setBooklet(resourceBundle.getString(cd.getBooklet().getName()));
+            }
+            cdForm.setCountryEdition(resourceBundle.getString(cd.getCountryEdition().getName()));
+            cdForm.setCdType(resourceBundle.getString(cd.getCdType().getName()));
+            cds.add(cdForm);
+        }
+        return cds;
     }
 
     @Override

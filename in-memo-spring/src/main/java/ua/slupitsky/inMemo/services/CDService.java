@@ -1,14 +1,17 @@
 package ua.slupitsky.inMemo.services;
 
+import ua.slupitsky.inMemo.models.dto.CDForm;
 import ua.slupitsky.inMemo.models.enums.CDGroup;
 import ua.slupitsky.inMemo.models.mongo.CD;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public interface CDService {
 
-    List<CD> findAllCDs();
+    List<CDForm> findAllCDs(ResourceBundle resourceBundle);
 
     Optional<CD> findCDById(int id);
 

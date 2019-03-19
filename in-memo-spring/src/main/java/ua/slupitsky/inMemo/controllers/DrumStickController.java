@@ -47,20 +47,7 @@ public class DrumStickController {
     @GetMapping(value = "/drumsticks")
     public Iterable<DrumStickForm> getDrumStickList(Locale locale){
         ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        List<DrumStick> drumSticksFromDB = drumStickService.findAllDrumSticks();
-        List<DrumStickForm> drumSticks = new ArrayList<>();
-        for (DrumStick drumStick: drumSticksFromDB){
-            DrumStickForm drumStickForm = new DrumStickForm();
-            drumStickForm.setId(drumStick.getId());
-            drumStickForm.setBand(drumStick.getBand());
-            drumStickForm.setDrummerName(drumStick.getDrummerName());
-            drumStickForm.setDate(formatter.format(drumStick.getDate()));
-            drumStickForm.setCity(resourceBundle.getString(drumStick.getCity().getName()));
-            drumStickForm.setDescription(resourceBundle.getString(drumStick.getDescription().getName()));
-            drumSticks.add(drumStickForm);
-        }
-        return drumSticks;
+        return drumStickService.findAllDrumSticksWithBundle(resourceBundle);
     }
 
     @ApiOperation(value = "Search Drum Stick with an ID", response = DrumStick.class)

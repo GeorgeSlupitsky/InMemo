@@ -45,24 +45,7 @@ public class CDController {
     @GetMapping("/cds")
     public Iterable<CDForm> getCDList(Locale locale){
         ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
-        List<CD> cdListFromDB = cdService.findAllCDs().stream().sorted(new CDComparator()).collect(Collectors.toList());
-        List<CDForm> cds = new ArrayList<>();
-        for (CD cd: cdListFromDB){
-            CDForm cdForm = new CDForm();
-            cdForm.setId(cd.getId());
-            cdForm.setBand(cd.getBand());
-            cdForm.setAlbum(cd.getAlbum());
-            cdForm.setYear(cd.getYear());
-            if (cd.getBooklet().getQuantityOfPages() != 0){
-                cdForm.setBooklet(cd.getBooklet().getQuantityOfPages() + " " + resourceBundle.getString(cd.getBooklet().getName()));
-            } else {
-                cdForm.setBooklet(resourceBundle.getString(cd.getBooklet().getName()));
-            }
-            cdForm.setCountryEdition(resourceBundle.getString(cd.getCountryEdition().getName()));
-            cdForm.setCdType(resourceBundle.getString(cd.getCdType().getName()));
-            cds.add(cdForm);
-        }
-        return cds;
+        return cdService.findAllCDs(resourceBundle);
     }
 
     @ApiOperation(value = "Search CD with an ID", response = CD.class)

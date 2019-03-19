@@ -2,12 +2,16 @@ package ua.slupitsky.inMemo.services.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.slupitsky.inMemo.models.dto.DrumStickForm;
 import ua.slupitsky.inMemo.models.mongo.DrumStick;
 import ua.slupitsky.inMemo.repositories.DrumStickRepository;
 import ua.slupitsky.inMemo.services.DrumStickService;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 @Service
 public class DrumStickServiceImpl implements DrumStickService {
@@ -17,6 +21,24 @@ public class DrumStickServiceImpl implements DrumStickService {
     @Autowired
     public DrumStickServiceImpl(DrumStickRepository drumStickRepository) {
         this.drumStickRepository = drumStickRepository;
+    }
+
+    @Override
+    public List<DrumStickForm> findAllDrumSticksWithBundle(ResourceBundle resourceBundle) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        List<DrumStick> drumSticksFromDB = drumStickRepository.findAll();
+        List<DrumStickForm> drumSticks = new ArrayList<>();
+        for (DrumStick drumStick: drumSticksFromDB){
+            DrumStickForm drumStickForm = new DrumStickForm();
+            drumStickForm.setId(drumStick.getId());
+            drumStickForm.setBand(drumStick.getBand());
+            drumStickForm.setDrummerName(drumStick.getDrummerName());
+            drumStickForm.setDate(formatter.format(drumStick.getDate()));
+            drumStickForm.setCity(resourceBundle.getString(drumStick.getCity().getName()));
+            drumStickForm.setDescription(resourceBundle.getString(drumStick.getDescription().getName()));
+            drumSticks.add(drumStickForm);
+        }
+        return drumSticks;
     }
 
     @Override
