@@ -41,6 +41,7 @@ class DrumStickList extends Component{
 
         const drumStickList = drumsticks.map(drumstick => {
             return <tr key={drumstick.id}>
+                <td><input type="checkbox"></input></td>
                 <td>{drumstick.id}</td>
                 <td style={{whiteSpace: 'nowrap'}}>{drumstick.band}</td>
                 <td>{drumstick.drummerName}</td>
@@ -67,9 +68,10 @@ class DrumStickList extends Component{
                 <Table className="mt-4">
                   <thead>
                   <tr>
+                    <th width="2%"></th>
                     <th width="2%">№</th>
                     <th width="20%">Band</th>
-                    <th width="28%">Drummer Name</th>
+                    <th width="26%">Drummer Name</th>
                     <th width="15%">Date</th>
                     <th width="15%">City</th>
                     <th width="15%">Description</th>
