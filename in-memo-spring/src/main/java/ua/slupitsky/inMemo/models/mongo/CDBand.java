@@ -13,6 +13,8 @@ public class CDBand {
 
     private String name;
 
+    private Integer order;
+
     private List<CDBandMainMember> bandMembers;
 
 }

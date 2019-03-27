@@ -13,6 +13,10 @@ public interface CDService {
 
     List<CDForm> findAllCDs(ResourceBundle resourceBundle);
 
+    List<CDForm> findByCDGroupWithResourceBundle(CDGroup cdGroup, ResourceBundle resourceBundle);
+
+    List<CD> findByCDGroup(CDGroup cdGroup);
+
     Optional<CD> findCDById(int id);
 
     void addCD(CD cd);
@@ -20,8 +24,6 @@ public interface CDService {
     void removeCD(int id);
 
     void updateCD(int id, CD cd);
-
-    List<CD> findByCDGroup(CDGroup cdGroup);
 
     void removeAllCDs();
 

@@ -19,8 +19,12 @@ public class CDComparator implements Comparator<CD> {
                 } else {
                     return o1.getYear().compareTo(o2.getYear());
                 }
+            } else {
+                if (o1.getIndexWeight().compareTo(o2.getIndexWeight()) == 0){
+                    return o1.getBand().getOrder().compareTo(o2.getBand().getOrder());
+                }
+                return o1.getIndexWeight().compareTo(o2.getIndexWeight());
             }
-            return o1.getBand().getName().compareTo(o2.getBand().getName());
         } else {
             Integer indexCDGroupO1 = getCompareIndexForCDGroup(o1);
             Integer indexCDGroupO2 = getCompareIndexForCDGroup(o2);

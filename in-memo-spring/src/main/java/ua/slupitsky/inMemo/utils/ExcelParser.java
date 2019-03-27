@@ -7,11 +7,15 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
+import ua.slupitsky.inMemo.models.constants.ExcelColumnCD;
+import ua.slupitsky.inMemo.models.constants.ExcelColumnDrumStick;
 import ua.slupitsky.inMemo.models.mongo.CDBand;
 import ua.slupitsky.inMemo.models.mongo.CDBandMainMember;
 import ua.slupitsky.inMemo.models.enums.*;
 import ua.slupitsky.inMemo.models.mongo.CD;
 import ua.slupitsky.inMemo.models.mongo.DrumStick;
+import ua.slupitsky.inMemo.sorting.CDComparator;
+import ua.slupitsky.inMemo.sorting.SortingUtils;
 import ua.slupitsky.inMemo.validation.exceptions.*;
 
 import java.io.IOException;
@@ -20,10 +24,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ExcelParser {
 
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+    private static int rowHeader = 0;
 
     private static Locale english = new Locale("en", "EN");
     private static Locale spanish = new Locale("es", "ES");
@@ -65,20 +72,19 @@ public class ExcelParser {
         Workbook wb = createWorkbook(inputStream, isXlsx);
 
         int numberOfSheets = wb.getNumberOfSheets();
-        int id = 1;
 
         for (int i = 0; i < numberOfSheets; i++) {
             Sheet sheet = wb.getSheetAt(i);
             if (sheet.getSheetName().equals(foreignEnglishCDSheetName) || sheet.getSheetName().equals(domesticEnglishCDSheetName)){
-                id = parseCDExcelFileWithLocal(sheet, id, i, resourceBundleEnglish, cdsFromFile);
+                parseCDExcelFileWithLocal(sheet, i, resourceBundleEnglish, cdsFromFile);
             } else if (sheet.getSheetName().equals(foreignSpanishCDSheetName) || sheet.getSheetName().equals(domesticSpanishCDSheetName)){
-                id = parseCDExcelFileWithLocal(sheet, id, i, resourceBundleSpanish, cdsFromFile);
+                parseCDExcelFileWithLocal(sheet, i, resourceBundleSpanish, cdsFromFile);
             } else if (sheet.getSheetName().equals(foreignJapaneseCDSheetName) || sheet.getSheetName().equals(domesticJapaneseCDSheetName)){
-                id = parseCDExcelFileWithLocal(sheet, id, i, resourceBundleJapanese, cdsFromFile);
+                parseCDExcelFileWithLocal(sheet, i, resourceBundleJapanese, cdsFromFile);
             } else if (sheet.getSheetName().equals(foreignRussianCDSheetName) || sheet.getSheetName().equals(domesticRussianCDSheetName)){
-                id = parseCDExcelFileWithLocal(sheet, id, i, resourceBundleRussian, cdsFromFile);
+                parseCDExcelFileWithLocal(sheet, i, resourceBundleRussian, cdsFromFile);
             } else if (sheet.getSheetName().equals(foreignUkrainianCDSheetName) || sheet.getSheetName().equals(domesticUkrainianCDSheetName)){
-                id = parseCDExcelFileWithLocal(sheet, id, i, resourceBundleUkrainian, cdsFromFile);
+                parseCDExcelFileWithLocal(sheet, i, resourceBundleUkrainian, cdsFromFile);
             } else {
                 if (isXlsx){
                     throw new WrongXlsxFileException("Xlsx file doesn't have right format");
@@ -88,7 +94,21 @@ public class ExcelParser {
             }
 
         }
+
+        SortingUtils.setWeightForSorting(cdsFromFile);
+
+        cdsFromFile.sort(new CDComparator());
+
+        setIdToCDs(cdsFromFile);
+
         return cdsFromFile;
+    }
+
+    private static void setIdToCDs(List <CD> cdList){
+        int id = 1;
+        for (CD cd: cdList){
+            cd.setId(id++);
+        }
     }
 
     public static List<DrumStick> parseExcelForDrumSticks(MultipartFile file, boolean isXlsx) throws WrongXlsFileException, WrongXlsxFileException, WrongParseDrumStickCityException, WrongParseDrumStickTypeException, IOException {
@@ -120,13 +140,12 @@ public class ExcelParser {
         return drumSticksFromFile;
     }
 
-    private static int parseCDExcelFileWithLocal(Sheet sheet, int id, int i, ResourceBundle resourceBundle, List<CD> cdsFromFile) throws WrongParseCDBookletException, WrongParseCDCountryException, WrongParseCDTypeException {
+    private static void parseCDExcelFileWithLocal(Sheet sheet, int i, ResourceBundle resourceBundle, List<CD> cdsFromFile) throws WrongParseCDBookletException, WrongParseCDCountryException, WrongParseCDTypeException {
         for (Row row : sheet) {
 
-            if (row.getRowNum() != 0) {
+            if (row.getRowNum() != rowHeader) {
 
                 CD cd = new CD();
-                cd.setId(id++);
 
                 if (i == 0) {
                     cd.setCdGroup(CDGroup.FOREIGN);
@@ -135,12 +154,16 @@ public class ExcelParser {
                 }
 
                 String bandName = null;
+                Integer order = null;
 
                 for (Cell cell : row){
-                    if (cell.getColumnIndex() != 0) {
-
+                    if (cell.getColumnIndex() != ExcelColumnCD.NUMBER) {
                         switch (cell.getColumnIndex()) {
-                            case 1:
+                            case ExcelColumnCD.ORDER:
+                                order = (int) cell.getNumericCellValue();
+                                break;
+
+                            case ExcelColumnCD.BAND:
                                 try {
                                     bandName = cell.getStringCellValue();
                                 } catch (Exception e) {
@@ -148,7 +171,7 @@ public class ExcelParser {
                                 }
                                 break;
 
-                            case 2:
+                            case ExcelColumnCD.ALBUM:
                                 try {
                                     cd.setAlbum(cell.getStringCellValue());
                                 } catch (Exception e) {
@@ -156,7 +179,7 @@ public class ExcelParser {
                                 }
                                 break;
 
-                            case 3:
+                            case ExcelColumnCD.YEAR:
                                 try {
                                     String year = String.valueOf(cell.getNumericCellValue()).replace(".0", "");
                                     cd.setYear(year);
@@ -165,23 +188,23 @@ public class ExcelParser {
                                 }
                                 break;
 
-                            case 4:
+                            case ExcelColumnCD.BOOKLET:
                                 setCDBooklet(cd, cell.getStringCellValue(), resourceBundle);
                                 break;
 
-                            case 5:
+                            case ExcelColumnCD.COUNTRY:
                                 setCDCountry(cd, getResourceBundleKey(cell.getStringCellValue(), resourceBundle));
                                 break;
 
-                            case 6:
+                            case ExcelColumnCD.NOTE:
                                 setCDType(cd, getResourceBundleKey(cell.getStringCellValue(), resourceBundle));
                                 break;
 
-                            case 7:
+                            case ExcelColumnCD.MEMBERS:
                                 String cellValue = cell.getStringCellValue();
                                 CDBand cdBand;
                                 if (cellValue.equals("-")){
-                                    cdBand = new CDBand(bandName, null);
+                                    cdBand = new CDBand(bandName, order, null);
                                 } else {
                                     String [] bandMembers = cell.getStringCellValue().split(", ");
                                     List<CDBandMainMember> cdBandMainMembers = new ArrayList<>();
@@ -190,7 +213,7 @@ public class ExcelParser {
                                         cdBandMainMember.setName(bandMember);
                                         cdBandMainMembers.add(cdBandMainMember);
                                     }
-                                    cdBand = new CDBand(bandName, cdBandMainMembers);
+                                    cdBand = new CDBand(bandName, order, cdBandMainMembers);
                                 }
                                 cd.setBand(cdBand);
                                 break;
@@ -200,7 +223,6 @@ public class ExcelParser {
                 cdsFromFile.add(cd);
             }
         }
-        return id;
     }
 
     private static void parseDrumStickWithLocal(Sheet sheet, ResourceBundle resourceBundle, List<DrumStick> drumSticksFromFile) throws WrongParseDrumStickCityException, WrongParseDrumStickTypeException {
@@ -208,26 +230,26 @@ public class ExcelParser {
 
         for (Row row: sheet){
 
-            if (row.getRowNum() != 0) {
+            if (row.getRowNum() != rowHeader) {
 
                 DrumStick drumStick = new DrumStick();
                 drumStick.setId(id++);
 
                 for (Cell cell: row){
-                    if (cell.getColumnIndex() != 0){
+                    if (cell.getColumnIndex() != ExcelColumnDrumStick.NUMBER){
 
                         switch (cell.getColumnIndex()){
-                            case 1:
+                            case ExcelColumnDrumStick.BAND:
                                 try {
                                     drumStick.setBand(cell.getStringCellValue());
                                 } catch (Exception e) {
                                     drumStick.setBand(String.valueOf(cell.getNumericCellValue()));
                                 }
                                 break;
-                            case 2:
+                            case ExcelColumnDrumStick.DRUMMER_NAME:
                                 drumStick.setDrummerName(cell.getStringCellValue());
                                 break;
-                            case 3:
+                            case ExcelColumnDrumStick.DATE:
                                 LocalDate date;
                                 try {
                                     Date input = cell.getDateCellValue();
@@ -238,10 +260,10 @@ public class ExcelParser {
                                 }
                                 drumStick.setDate(date);
                                 break;
-                            case 4:
+                            case ExcelColumnDrumStick.CITY:
                                 setDrumStickCity(drumStick, getResourceBundleKey(cell.getStringCellValue(), resourceBundle));
                                 break;
-                            case 5:
+                            case ExcelColumnDrumStick.NOTE:
                                 setDrumStickType(drumStick, getResourceBundleKey(cell.getStringCellValue(), resourceBundle));
                                 break;
                         }

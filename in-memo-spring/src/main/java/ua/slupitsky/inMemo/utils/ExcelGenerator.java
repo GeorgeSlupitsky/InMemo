@@ -1,6 +1,8 @@
 package ua.slupitsky.inMemo.utils;
 
 import org.apache.poi.ss.usermodel.*;
+import ua.slupitsky.inMemo.models.constants.ExcelColumnCD;
+import ua.slupitsky.inMemo.models.constants.ExcelColumnDrumStick;
 import ua.slupitsky.inMemo.models.mongo.CDBandMainMember;
 import ua.slupitsky.inMemo.models.enums.CDBooklet;
 import ua.slupitsky.inMemo.models.enums.ExportType;
@@ -46,7 +48,7 @@ public class ExcelGenerator {
         }
     }
 
-    private static void buildExcelForCDs(Map<String, Object> model, Workbook workbook, HttpServletRequest request, HttpServletResponse response, boolean isXLS) throws URISyntaxException {
+    private static void buildExcelForCDs(Map<String, Object> model, Workbook workbook, HttpServletRequest request, HttpServletResponse response, boolean isXLS) {
         @SuppressWarnings("unchecked")
         List<CD> foreignCDs = (List<CD>) model.get("foreignCDs");
 
@@ -74,78 +76,82 @@ public class ExcelGenerator {
     private static void createExcelSheetForCD(Workbook workbook, List<CD> cds, String sheetName){
         Sheet sheet = workbook.createSheet(sheetName);
         sheet.setDefaultColumnWidth(30);
-        sheet.setColumnWidth(0, 1200);
-        sheet.setColumnWidth(2, 10000);
-        sheet.setColumnWidth(3, 3000);
-        sheet.setColumnWidth(6, 5500);
-        sheet.setColumnWidth(7, 15000);
+        sheet.setColumnWidth(ExcelColumnCD.NUMBER, 1200);
+        sheet.setColumnWidth(ExcelColumnCD.ORDER, 1200);
+        sheet.setColumnWidth(ExcelColumnCD.ALBUM, 10000);
+        sheet.setColumnWidth(ExcelColumnCD.YEAR, 3000);
+        sheet.setColumnWidth(ExcelColumnCD.NOTE, 5500);
+        sheet.setColumnWidth(ExcelColumnCD.MEMBERS, 15000);
 
         Row header = sheet.createRow(0);
-        header.createCell(0).setCellValue("№");
-        header.getCell(0).setCellStyle(style);
-        header.createCell(1).setCellValue(resourceBundle.getString("cd.band"));
-        header.getCell(1).setCellStyle(style);
-        header.createCell(2).setCellValue(resourceBundle.getString("cd.album"));
-        header.getCell(2).setCellStyle(style);
-        header.createCell(3).setCellValue(resourceBundle.getString("cd.year"));
-        header.getCell(3).setCellStyle(style);
-        header.createCell(4).setCellValue(resourceBundle.getString("cd.booklet"));
-        header.getCell(4).setCellStyle(style);
-        header.createCell(5).setCellValue(resourceBundle.getString("cd.country"));
-        header.getCell(5).setCellStyle(style);
-        header.createCell(6).setCellValue(resourceBundle.getString("cd.description"));
-        header.getCell(6).setCellStyle(style);
-        header.createCell(7).setCellValue(resourceBundle.getString("cd.members"));
-        header.getCell(7).setCellStyle(style);
+        header.createCell(ExcelColumnCD.NUMBER).setCellValue("№");
+        header.getCell(ExcelColumnCD.NUMBER).setCellStyle(style);
+        header.createCell(ExcelColumnCD.ORDER).setCellValue("<>");
+        header.getCell(ExcelColumnCD.ORDER).setCellStyle(style);
+        header.createCell(ExcelColumnCD.BAND).setCellValue(resourceBundle.getString("cd.band"));
+        header.getCell(ExcelColumnCD.BAND).setCellStyle(style);
+        header.createCell(ExcelColumnCD.ALBUM).setCellValue(resourceBundle.getString("cd.album"));
+        header.getCell(ExcelColumnCD.ALBUM).setCellStyle(style);
+        header.createCell(ExcelColumnCD.YEAR).setCellValue(resourceBundle.getString("cd.year"));
+        header.getCell(ExcelColumnCD.YEAR).setCellStyle(style);
+        header.createCell(ExcelColumnCD.BOOKLET).setCellValue(resourceBundle.getString("cd.booklet"));
+        header.getCell(ExcelColumnCD.BOOKLET).setCellStyle(style);
+        header.createCell(ExcelColumnCD.COUNTRY).setCellValue(resourceBundle.getString("cd.country"));
+        header.getCell(ExcelColumnCD.COUNTRY).setCellStyle(style);
+        header.createCell(ExcelColumnCD.NOTE).setCellValue(resourceBundle.getString("cd.description"));
+        header.getCell(ExcelColumnCD.NOTE).setCellStyle(style);
+        header.createCell(ExcelColumnCD.MEMBERS).setCellValue(resourceBundle.getString("cd.members"));
+        header.getCell(ExcelColumnCD.MEMBERS).setCellStyle(style);
 
         int rowCount = 1;
 
         for(CD cd : cds){
             Row cdRow =  sheet.createRow(rowCount++);
-            cdRow.createCell(0).setCellValue(rowCount - 1);
-            cdRow.createCell(1).setCellValue(cd.getBand().getName());
-            cdRow.createCell(2).setCellValue(cd.getAlbum());
-            cdRow.createCell(3).setCellValue(cd.getYear());
+            cdRow.createCell(ExcelColumnCD.NUMBER).setCellValue(rowCount - 1);
+            cdRow.createCell(ExcelColumnCD.ORDER).setCellValue(cd.getBand().getOrder());
+            cdRow.createCell(ExcelColumnCD.BAND).setCellValue(cd.getBand().getName());
+            cdRow.createCell(ExcelColumnCD.ALBUM).setCellValue(cd.getAlbum());
+            cdRow.createCell(ExcelColumnCD.YEAR).setCellValue(cd.getYear());
             if (cd.getBooklet().equals(CDBooklet.WITH_OUT) || cd.getBooklet().equals(CDBooklet.DIGIPACK) || cd.getBooklet().equals(CDBooklet.BOX) || cd.getBooklet().equals(CDBooklet.BOOK)){
-                cdRow.createCell(4).setCellValue(resourceBundle.getString(cd.getBooklet().getName()));
+                cdRow.createCell(ExcelColumnCD.BOOKLET).setCellValue(resourceBundle.getString(cd.getBooklet().getName()));
             } else {
-                cdRow.createCell(4).setCellValue(cd.getBooklet().getQuantityOfPages() + " " + resourceBundle.getString(cd.getBooklet().getName()));
+                cdRow.createCell(ExcelColumnCD.BOOKLET).setCellValue(cd.getBooklet().getQuantityOfPages() + " " + resourceBundle.getString(cd.getBooklet().getName()));
             }
-            cdRow.createCell(5).setCellValue(resourceBundle.getString(cd.getCountryEdition().getName()));
-            cdRow.createCell(6).setCellValue(resourceBundle.getString(cd.getCdType().getName()));
+            cdRow.createCell(ExcelColumnCD.COUNTRY).setCellValue(resourceBundle.getString(cd.getCountryEdition().getName()));
+            cdRow.createCell(ExcelColumnCD.NOTE).setCellValue(resourceBundle.getString(cd.getCdType().getName()));
 
             List<CDBandMainMember> bandMainMembers = cd.getBand().getBandMembers();
             if (bandMainMembers == null){
-                cdRow.createCell(7).setCellValue("-");
+                cdRow.createCell(ExcelColumnCD.MEMBERS).setCellValue("-");
             } else {
                 StringBuilder members = Utils.iterateCDBandMembers(bandMainMembers);
-                cdRow.createCell(7).setCellValue(members.toString());
+                cdRow.createCell(ExcelColumnCD.MEMBERS).setCellValue(members.toString());
             }
         }
     }
 
-    private static void buildExcelForDrumSticks(Map<String, Object> model, Workbook workbook, HttpServletRequest request, HttpServletResponse response, boolean isXLS) throws URISyntaxException {
+    private static void buildExcelForDrumSticks(Map<String, Object> model, Workbook workbook, HttpServletRequest request, HttpServletResponse response, boolean isXLS) {
         @SuppressWarnings("unchecked")
         List<DrumStick> drumSticks = (List<DrumStick>) model.get("drumSticks");
 
         Sheet sheet = workbook.createSheet(resourceBundle.getString("drumstick.sheetName"));
         sheet.setDefaultColumnWidth(30);
-        sheet.setColumnWidth(0, 1200);
-        sheet.setColumnWidth(3, 3000);
+        sheet.setColumnWidth(ExcelColumnDrumStick.NUMBER, 1200);
+        sheet.setColumnWidth(ExcelColumnDrumStick.DATE, 3000);
 
         Row header = sheet.createRow(0);
-        header.createCell(0).setCellValue("№");
-        header.getCell(0).setCellStyle(style);
-        header.createCell(1).setCellValue(resourceBundle.getString("drumstick.band"));
-        header.getCell(1).setCellStyle(style);
-        header.createCell(2).setCellValue(resourceBundle.getString("drumstick.drummerName"));
-        header.getCell(2).setCellStyle(style);
-        header.createCell(3).setCellValue(resourceBundle.getString("drumstick.date"));
-        header.getCell(3).setCellStyle(style);
-        header.createCell(4).setCellValue(resourceBundle.getString("drumstick.city"));
-        header.getCell(4).setCellStyle(style);
-        header.createCell(5).setCellValue(resourceBundle.getString("drumstick.description"));
-        header.getCell(5).setCellStyle(style);
+        header.createCell(ExcelColumnDrumStick.NUMBER).setCellValue("№");
+        header.getCell(ExcelColumnDrumStick.NUMBER).setCellStyle(style);
+        header.createCell(ExcelColumnDrumStick.BAND).setCellValue(resourceBundle.getString("drumstick.band"));
+        header.getCell(ExcelColumnDrumStick.BAND).setCellStyle(style);
+        header.createCell(ExcelColumnDrumStick.DRUMMER_NAME).setCellValue(resourceBundle.getString("drumstick.drummerName"));
+        header.getCell(ExcelColumnDrumStick.DRUMMER_NAME).setCellStyle(style);
+        header.createCell(ExcelColumnDrumStick.DATE).setCellValue(resourceBundle.getString("drumstick.date"));
+        header.getCell(ExcelColumnDrumStick.DATE).setCellStyle(style);
+        header.createCell(ExcelColumnDrumStick.CITY).setCellValue(resourceBundle.getString("drumstick.city"));
+        header.getCell(ExcelColumnDrumStick.CITY).setCellStyle(style);
+        header.createCell(ExcelColumnDrumStick.NOTE).setCellValue(resourceBundle.getString("drumstick.description"));
+        header.getCell(ExcelColumnDrumStick.NOTE).setCellStyle(style);
 
         int rowCount = 1;
 

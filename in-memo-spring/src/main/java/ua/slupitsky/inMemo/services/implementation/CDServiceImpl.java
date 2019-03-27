@@ -7,10 +7,9 @@ import ua.slupitsky.inMemo.models.enums.CDGroup;
 import ua.slupitsky.inMemo.models.mongo.CD;
 import ua.slupitsky.inMemo.repositories.CDRepository;
 import ua.slupitsky.inMemo.services.CDService;
-import ua.slupitsky.inMemo.sorting.CDComparator;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
 public class CDServiceImpl implements CDService {
@@ -24,24 +23,19 @@ public class CDServiceImpl implements CDService {
 
     @Override
     public List<CDForm> findAllCDs(ResourceBundle resourceBundle) {
-        List <CD> cdsFromDB = cdRepository.findAll().stream().sorted(new CDComparator()).collect(Collectors.toList());
-        List<CDForm> cds = new ArrayList<>();
-        for (CD cd: cdsFromDB){
-            CDForm cdForm = new CDForm();
-            cdForm.setId(cd.getId());
-            cdForm.setBand(cd.getBand());
-            cdForm.setAlbum(cd.getAlbum());
-            cdForm.setYear(cd.getYear());
-            if (cd.getBooklet().getQuantityOfPages() != 0){
-                cdForm.setBooklet(cd.getBooklet().getQuantityOfPages() + " " + resourceBundle.getString(cd.getBooklet().getName()));
-            } else {
-                cdForm.setBooklet(resourceBundle.getString(cd.getBooklet().getName()));
-            }
-            cdForm.setCountryEdition(resourceBundle.getString(cd.getCountryEdition().getName()));
-            cdForm.setCdType(resourceBundle.getString(cd.getCdType().getName()));
-            cds.add(cdForm);
-        }
-        return cds;
+        List<CD> cdsFromDB = cdRepository.findAll();
+        return getCDFormFromEntity(cdsFromDB, resourceBundle);
+    }
+
+    @Override
+    public List<CD> findByCDGroup(CDGroup cdGroup) {
+        return cdRepository.findCDByCdGroup(cdGroup);
+    }
+
+    @Override
+    public List<CDForm> findByCDGroupWithResourceBundle(CDGroup cdGroup, ResourceBundle resourceBundle) {
+        List<CD> cdsFromDB = cdRepository.findCDByCdGroup(cdGroup);
+        return getCDFormFromEntity(cdsFromDB, resourceBundle);
     }
 
     @Override
@@ -74,11 +68,6 @@ public class CDServiceImpl implements CDService {
     }
 
     @Override
-    public List<CD> findByCDGroup(CDGroup cdGroup) {
-        return cdRepository.findCDByCdGroup(cdGroup);
-    }
-
-    @Override
     public void removeAllCDs() {
         cdRepository.deleteAll();
     }
@@ -86,5 +75,25 @@ public class CDServiceImpl implements CDService {
     @Override
     public void addCollectionCD(List<CD> cds) {
         cdRepository.saveAll(cds);
+    }
+
+    private List<CDForm> getCDFormFromEntity(List<CD> cdsFromDB, ResourceBundle resourceBundle){
+        List<CDForm> cds = new ArrayList<>();
+        for (CD cd: cdsFromDB){
+            CDForm cdForm = new CDForm();
+            cdForm.setId(cd.getId());
+            cdForm.setBand(cd.getBand());
+            cdForm.setAlbum(cd.getAlbum());
+            cdForm.setYear(cd.getYear());
+            if (cd.getBooklet().getQuantityOfPages() != 0){
+                cdForm.setBooklet(cd.getBooklet().getQuantityOfPages() + " " + resourceBundle.getString(cd.getBooklet().getName()));
+            } else {
+                cdForm.setBooklet(resourceBundle.getString(cd.getBooklet().getName()));
+            }
+            cdForm.setCountryEdition(resourceBundle.getString(cd.getCountryEdition().getName()));
+            cdForm.setCdType(resourceBundle.getString(cd.getCdType().getName()));
+            cds.add(cdForm);
+        }
+        return cds;
     }
 }

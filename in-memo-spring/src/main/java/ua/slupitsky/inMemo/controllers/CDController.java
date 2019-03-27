@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.slupitsky.inMemo.models.dto.CDForm;
+import ua.slupitsky.inMemo.models.enums.CDGroup;
 import ua.slupitsky.inMemo.models.mongo.CD;
 import ua.slupitsky.inMemo.services.CDService;
-import ua.slupitsky.inMemo.sorting.CDComparator;
 import ua.slupitsky.inMemo.utils.ExcelParser;
 import ua.slupitsky.inMemo.validation.exceptions.*;
 
@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -46,6 +45,20 @@ public class CDController {
     public Iterable<CDForm> getCDList(Locale locale){
         ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
         return cdService.findAllCDs(resourceBundle);
+    }
+
+    @ApiOperation(value = "View a foreign list of CDs", response = Iterable.class)
+    @GetMapping("/cdsForeign")
+    public Iterable<CDForm> getForeignCDList(Locale locale){
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        return cdService.findByCDGroupWithResourceBundle(CDGroup.FOREIGN, resourceBundle);
+    }
+
+    @ApiOperation(value = "View a domestic list of CDs", response = Iterable.class)
+    @GetMapping("/cdsDomestic")
+    public Iterable<CDForm> getDomesticCDList(Locale locale){
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        return cdService.findByCDGroupWithResourceBundle(CDGroup.DOMESTIC, resourceBundle);
     }
 
     @ApiOperation(value = "Search CD with an ID", response = CD.class)
@@ -122,10 +135,6 @@ public class CDController {
         }
 
         log.info("File parsed without errors");
-
-//        Collections.shuffle(cds);
-
-        cds = cds.stream().sorted(new CDComparator()).collect(Collectors.toList());
 
         if (rewriteDB){
             cdService.removeAllCDs();

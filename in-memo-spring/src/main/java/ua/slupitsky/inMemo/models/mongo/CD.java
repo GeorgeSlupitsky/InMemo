@@ -39,4 +39,7 @@ public class CD {
     @ApiModelProperty(notes = "Group of Collection")
     private CDGroup cdGroup;
 
+    @ApiModelProperty(notes = "Index for comparing")
+    private Integer indexWeight;
+
 }
