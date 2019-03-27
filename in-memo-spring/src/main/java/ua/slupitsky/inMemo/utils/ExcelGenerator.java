@@ -37,15 +37,13 @@ public class ExcelGenerator {
 
         String type = (String) model.get("typeOfExport");
 
-        try {
-            if (type.equals(ExportType.CD.getName())){
-                buildExcelForCDs(model, workbook, request, response, isXLS);
-            } else if (type.equals(ExportType.DRUM_STICK.getName())){
-                buildExcelForDrumSticks(model, workbook, request, response, isXLS);
-            }
-        } catch (URISyntaxException e){
-            e.getStackTrace();
+
+        if (type.equals(ExportType.CD.getName())){
+            buildExcelForCDs(model, workbook, request, response, isXLS);
+        } else if (type.equals(ExportType.DRUM_STICK.getName())){
+            buildExcelForDrumSticks(model, workbook, request, response, isXLS);
         }
+
     }
 
     private static void buildExcelForCDs(Map<String, Object> model, Workbook workbook, HttpServletRequest request, HttpServletResponse response, boolean isXLS) {
