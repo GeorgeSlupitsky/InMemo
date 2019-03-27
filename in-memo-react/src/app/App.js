@@ -11,12 +11,23 @@ import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
 class App extends Component {
     render() {
+      const WrappedCDListForAll = function(props) {
+        return (<CDList {...props} group='all'/>)
+      }
+      const WrappedCDListForForeign = function(props) {
+        return (<CDList {...props} group='foreign'/>)
+      }
+      const WrappedCDListForDomestic = function(props) {
+        return (<CDList {...props} group='domestic'/>)
+      }
     return (
       <div>
         <Router>
           <Switch>
             <Route path='/' exact={true} component={Home}/>
-            <Route path='/cds' exact={true} component={CDList}/>
+            <Route path='/cds' exact={true} component={WrappedCDListForAll}/>
+            <Route path='/cdsForeign' exact={true} component={WrappedCDListForForeign}/>
+            <Route path='/cdsDomestic' exact={true} component={WrappedCDListForDomestic}/>
             <Route path='/cds/:id' component={CDEdit}/>
             <Route path='/drumsticks' exact={true} component={DrumStickList}/>
             <Route path='/drumsticks/:id' component={DrumStickEdit}/>

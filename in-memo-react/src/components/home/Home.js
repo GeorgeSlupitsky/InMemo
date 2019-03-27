@@ -13,6 +13,12 @@ class Home extends Component {
           <Button color="link"><Link to="/cds">Manage CDs</Link></Button>
         </Container>
         <Container fluid>
+          <Button color="link"><Link to="/cdsForeign">Manage Foreign CDs</Link></Button>
+        </Container>
+        <Container fluid>
+          <Button color="link"><Link to="/cdsDomestic">Manage Domestic CDs</Link></Button>
+        </Container>
+        <Container fluid>
           <Button color="link"><Link to="/drumsticks">Manage Drumsticks</Link></Button>
         </Container>
       </div>

@@ -39,10 +39,12 @@ class DrumStickList extends Component{
             return <p>Loading...</p>;
         }
 
+        let number = 1;
+
         const drumStickList = drumsticks.map(drumstick => {
             return <tr key={drumstick.id}>
                 <td><input type="checkbox"></input></td>
-                <td>{drumstick.id}</td>
+                <td>{number++}</td>
                 <td style={{whiteSpace: 'nowrap'}}>{drumstick.band}</td>
                 <td>{drumstick.drummerName}</td>
                 <td>{drumstick.date}</td>

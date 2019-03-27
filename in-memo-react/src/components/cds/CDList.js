@@ -13,9 +13,20 @@ class CDList extends Component{
 
     componentDidMount(){
         this.setState({isLoading: true});
-        fetch('api/cds')
-            .then(response => response.json())
-            .then(data => this.setState({cds: data, isLoading: false}));
+        if (this.props.group === 'all'){
+          fetch('api/cds')
+          .then(response => response.json())
+          .then(data => this.setState({cds: data, isLoading: false}));
+        } else if (this.props.group === 'foreign'){
+          fetch('api/cdsForeign')
+          .then(response => response.json())
+          .then(data => this.setState({cds: data, isLoading: false}));
+        } else {
+          fetch('api/cdsDomestic')
+          .then(response => response.json())
+          .then(data => this.setState({cds: data, isLoading: false}));
+        }
+        
     }
 
     async remove(id) {
@@ -38,9 +49,11 @@ class CDList extends Component{
             return <p>Loading...</p>;
         }
 
+        let number = 1;
+
         const cdList = cds.map(cd => {
             return <tr key={cd.id}>
-                <td>{cd.id}</td>
+                <td>{number++}</td>
                 <td style={{whiteSpace: 'nowrap'}}>{cd.band.name}</td>
                 <td>{cd.album}</td>
                 <td>{cd.year}</td>
@@ -57,6 +70,16 @@ class CDList extends Component{
             </tr>
         });
 
+        let cdCollection = ''
+
+        if (this.props.group === 'all'){
+          cdCollection = 'My CD Collection'
+        } else if (this.props.group === 'foreign'){
+          cdCollection = 'My Foreign CD Collection'
+        } else {
+          cdCollection = 'My Domestic CD Collection'
+        }
+
         return (
             <div>
               <AppNavbar/>
@@ -64,7 +87,7 @@ class CDList extends Component{
                 <div className="float-right">
                   <Button color="success" tag={Link} to="/cds/new">Add CD</Button>
                 </div>
-                <h3>My CD Collection</h3>
+                <h3>{cdCollection}</h3>
                 <Table className="mt-4">
                   <thead>
                   <tr>
