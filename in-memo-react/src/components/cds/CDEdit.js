@@ -6,20 +6,32 @@ import AppNavbar from '../../common/AppNavbar';
 class CDEdit extends Component {
 
   emptyItem = {
-    band: '',
+    band: {
+      name: '',
+      order: '',
+      bandMembers: [{
+        name: ''
+      }]
+    },
     album: '',
     year: '',
     booklet: '',
     countryEdition: '',
-    cdType: ''
+    cdType: '',
+    cdGroup: ''
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      item: this.emptyItem
+      item: this.emptyItem,
+      booklets: [],
+      countries: [],
+      types: [],
+      groups: []
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeForBand = this.handleChangeForBand.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -28,21 +40,36 @@ class CDEdit extends Component {
       const cd = await (await fetch(`/api/cd/${this.props.match.params.id}`)).json();
       this.setState({item: cd});
     }
+    const booklets = await (await fetch(`/api/cds/booklets/`)).json();
+    const countries = await (await fetch(`/api/cds/countries/`)).json();
+    const types = await (await fetch(`/api/cds/types/`)).json();
+    const groups = await (await fetch(`/api/cds/groups/`)).json();
+    this.setState({
+      booklets: booklets,
+      countries: countries,
+      types: types,
+      groups: groups
+    })
   }
 
   handleChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
+    const {value, name} = event.target;
     let item = {...this.state.item};
     item[name] = value;
+    this.setState({item});
+  }
+
+  handleChangeForBand(event) {
+    const {value, id, name} = event.target;
+    let item = {...this.state.item};
+    item[id][name] = value;
     this.setState({item});
   }
 
   async handleSubmit(event) {
     event.preventDefault();
     const {item} = this.state;
-
+    console.log(item)
     await fetch('/api/cd', {
       method: (item.id) ? 'PUT' : 'POST',
       headers: {
@@ -55,8 +82,24 @@ class CDEdit extends Component {
   }
 
   render() {
-    const {item} = this.state;
+    const {item, booklets, countries, types, groups} = this.state;
     const title = <h2>{item.id ? 'Edit CD' : 'Add CD'}</h2>;
+
+    let optionBookletItems = booklets.map((booklet) =>
+        <option key={booklet.id} value={booklet.cdBookletEnum}>{booklet.name}</option>
+    );
+
+    let optionCountryItems = countries.map((country) =>
+        <option key={country.id} value={country.cdCountryEnum}>{country.name}</option>
+    );
+
+    let optionTypeItems = types.map((type) =>
+        <option key={type.id} value={type.cdTypeEnum}>{type.name}</option>
+    );
+
+    let optionGroupItems = groups.map((group) =>
+        <option key={group.id} value={group.cdGroupEnum}>{group.name}</option>
+    );
 
     return <div>
       <AppNavbar/>
@@ -64,9 +107,9 @@ class CDEdit extends Component {
         {title}
         <Form onSubmit={this.handleSubmit}>
           <FormGroup>
-            <Label for="band.name">Band</Label>
-            <Input type="text" name="band.name" id="band.name" value={item.band.name}
-                   onChange={this.handleChange} autoComplete="name"/>
+            <Label for="name">Band</Label>
+            <Input type="text" name="name" id="band" value={item.band.name}
+                   onChange={this.handleChangeForBand}/>
           </FormGroup>
           <FormGroup>
             <Label for="album">Album</Label>
@@ -79,20 +122,33 @@ class CDEdit extends Component {
                    onChange={this.handleChange} autoComplete="address-level1"/>
           </FormGroup>
           <div className="row">
-            <FormGroup className="col-md-4 mb-3">
+            <FormGroup className="col-md-2 mb-3">
               <Label for="booklet">Booklet</Label>
-              <Input type="text" name="booklet" id="booklet" value={item.booklet || ''}
-                     onChange={this.handleChange} autoComplete="address-level1"/>
+              <Input type="select" name="booklet" id="booklet" value={item.booklet || ''}
+                     onChange={this.handleChange}>
+                {optionBookletItems}
+              </Input>
             </FormGroup>
-            <FormGroup className="col-md-5 mb-3">
+            <FormGroup className="col-md-2 mb-3">
               <Label for="countryEdition">Country</Label>
-              <Input type="text" name="countryEdition" id="countryEdition" value={item.countryEdition || ''}
-                     onChange={this.handleChange} autoComplete="address-level1"/>
+              <Input type="select" name="countryEdition" id="countryEdition" value={item.countryEdition || ''}
+                     onChange={this.handleChange} autoComplete="address-level1">
+                {optionCountryItems}
+              </Input>
             </FormGroup>
             <FormGroup className="col-md-3 mb-3">
               <Label for="cdType">Type</Label>
-              <Input type="text" name="cdType" id="cdType" value={item.cdType || ''}
-                     onChange={this.handleChange} autoComplete="address-level1"/>
+              <Input type="select" name="cdType" id="cdType" value={item.cdType || ''}
+                     onChange={this.handleChange} autoComplete="address-level1">
+                {optionTypeItems}
+              </Input>
+            </FormGroup>
+            <FormGroup className="col-md-3 mb-3">
+              <Label for="cdGroup">Group</Label>
+              <Input type="select" name="cdGroup" id="cdGroup" value={item.cdGroup || ''}
+                     onChange={this.handleChange} autoComplete="address-level1">
+                {optionGroupItems}
+              </Input>
             </FormGroup>
           </div>
           <FormGroup>
