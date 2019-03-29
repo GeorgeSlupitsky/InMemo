@@ -24,7 +24,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ExcelParser {
 
@@ -43,24 +42,24 @@ public class ExcelParser {
     private static ResourceBundle resourceBundleRussian = ResourceBundle.getBundle("InMemo", russian);
     private static ResourceBundle resourceBundleUkrainian = ResourceBundle.getBundle("InMemo", ukrainian);
 
-    private static String foreignEnglishCDSheetName = resourceBundleEnglish.getString("cd.sheetName.foreign");
-    private static String domesticEnglishCDSheetName = resourceBundleEnglish.getString("cd.sheetName.domestic");
+    private static String foreignEnglishCDSheetName = resourceBundleEnglish.getString("cd.group.foreign");
+    private static String domesticEnglishCDSheetName = resourceBundleEnglish.getString("cd.group.domestic");
     private static String englishDrumStickSheetName = resourceBundleEnglish.getString("drumstick.sheetName");
 
-    private static String foreignSpanishCDSheetName = resourceBundleSpanish.getString("cd.sheetName.foreign");
-    private static String domesticSpanishCDSheetName = resourceBundleSpanish.getString("cd.sheetName.domestic");
+    private static String foreignSpanishCDSheetName = resourceBundleSpanish.getString("cd.group.foreign");
+    private static String domesticSpanishCDSheetName = resourceBundleSpanish.getString("cd.group.domestic");
     private static String spanishDrumStickSheetName = resourceBundleSpanish.getString("drumstick.sheetName");
 
-    private static String foreignJapaneseCDSheetName = resourceBundleJapanese.getString("cd.sheetName.foreign");
-    private static String domesticJapaneseCDSheetName = resourceBundleJapanese.getString("cd.sheetName.domestic");
+    private static String foreignJapaneseCDSheetName = resourceBundleJapanese.getString("cd.group.foreign");
+    private static String domesticJapaneseCDSheetName = resourceBundleJapanese.getString("cd.group.domestic");
     private static String japaneseDrumStickSheetName = resourceBundleJapanese.getString("drumstick.sheetName");
 
-    private static String foreignRussianCDSheetName = resourceBundleRussian.getString("cd.sheetName.foreign");
-    private static String domesticRussianCDSheetName = resourceBundleRussian.getString("cd.sheetName.domestic");
+    private static String foreignRussianCDSheetName = resourceBundleRussian.getString("cd.group.foreign");
+    private static String domesticRussianCDSheetName = resourceBundleRussian.getString("cd.group.domestic");
     private static String russianDrumStickSheetName = resourceBundleRussian.getString("drumstick.sheetName");
 
-    private static String foreignUkrainianCDSheetName = resourceBundleUkrainian.getString("cd.sheetName.foreign");
-    private static String domesticUkrainianCDSheetName = resourceBundleUkrainian.getString("cd.sheetName.domestic");
+    private static String foreignUkrainianCDSheetName = resourceBundleUkrainian.getString("cd.group.foreign");
+    private static String domesticUkrainianCDSheetName = resourceBundleUkrainian.getString("cd.group.domestic");
     private static String ukrainianDrumStickSheetName = resourceBundleUkrainian.getString("drumstick.sheetName");
 
 

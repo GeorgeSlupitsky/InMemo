@@ -5,6 +5,7 @@ public enum CDBooklet {
     BOX("cd.booklet.box"),
     DIGIPACK("cd.booklet.digipack"),
     BOOK("cd.booklet.book"),
+    FLASH_DRIVE("cd.booklet.flash"),
     PAGES_4( "cd.booklet.pages", 4),
     PAGES_6( "cd.booklet.pages", 6),
     PAGES_8( "cd.booklet.pages", 8),

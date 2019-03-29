@@ -79,12 +79,12 @@ public class PdfView extends AbstractPdfView {
         String tableName;
 
         if (!foreignCDs.isEmpty()){
-            tableName = resourceBundle.getString("cd.sheetName.foreign");
+            tableName = resourceBundle.getString("cd.group.foreign");
             createPdfTableForCDWithHeader(document, tableName, foreignCDs, false);
         }
 
         if (!domesticCDs.isEmpty()){
-            tableName = resourceBundle.getString("cd.sheetName.domestic");
+            tableName = resourceBundle.getString("cd.group.domestic");
             createPdfTableForCDWithHeader(document, tableName,domesticCDs, true);
         }
     }

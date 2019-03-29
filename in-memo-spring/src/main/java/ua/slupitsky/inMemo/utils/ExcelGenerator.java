@@ -12,7 +12,6 @@ import ua.slupitsky.inMemo.models.mongo.DrumStick;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URISyntaxException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
@@ -54,12 +53,12 @@ public class ExcelGenerator {
         List<CD> domesticCDs = (List<CD>) model.get("domesticCDs");
 
         if (!foreignCDs.isEmpty()){
-            String foreign = resourceBundle.getString("cd.sheetName.foreign");
+            String foreign = resourceBundle.getString("cd.group.foreign");
             createExcelSheetForCD(workbook, foreignCDs, foreign);
         }
 
         if (!domesticCDs.isEmpty()){
-            String domestic = resourceBundle.getString("cd.sheetName.domestic");
+            String domestic = resourceBundle.getString("cd.group.domestic");
             createExcelSheetForCD(workbook, domesticCDs, domestic);
         }
 
