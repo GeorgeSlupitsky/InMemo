@@ -8,17 +8,17 @@ class CDEdit extends Component {
   emptyItem = {
     band: {
       name: '',
-      order: '',
+      order: 'MAIN',
       bandMembers: [{
         name: ''
       }]
     },
     album: '',
     year: '',
-    booklet: '',
-    countryEdition: '',
-    cdType: '',
-    cdGroup: ''
+    booklet: 'WITH_OUT',
+    countryEdition: 'UKRAINE',
+    cdType: 'NUMBER',
+    cdGroup: 'FOREIGN'
   };
 
   constructor(props) {
@@ -28,7 +28,8 @@ class CDEdit extends Component {
       booklets: [],
       countries: [],
       types: [],
-      groups: []
+      groups: [],
+      bandOrders: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeForBand = this.handleChangeForBand.bind(this);
@@ -40,15 +41,17 @@ class CDEdit extends Component {
       const cd = await (await fetch(`/api/cd/${this.props.match.params.id}`)).json();
       this.setState({item: cd});
     }
-    const booklets = await (await fetch(`/api/cds/booklets/`)).json();
-    const countries = await (await fetch(`/api/cds/countries/`)).json();
-    const types = await (await fetch(`/api/cds/types/`)).json();
-    const groups = await (await fetch(`/api/cds/groups/`)).json();
+    const booklets = await (await fetch(`/api/enums/cds/booklets/`)).json();
+    const countries = await (await fetch(`/api/enums/cds/countries/`)).json();
+    const types = await (await fetch(`/api/enums/cds/types/`)).json();
+    const groups = await (await fetch(`/api/enums/cds/groups/`)).json();
+    const bandOrders = await (await fetch(`/api/enums/cds/band/orders`)).json();
     this.setState({
       booklets: booklets,
       countries: countries,
       types: types,
-      groups: groups
+      groups: groups,
+      bandOrders: bandOrders
     })
   }
 
@@ -69,7 +72,6 @@ class CDEdit extends Component {
   async handleSubmit(event) {
     event.preventDefault();
     const {item} = this.state;
-    console.log(item)
     await fetch('/api/cd', {
       method: (item.id) ? 'PUT' : 'POST',
       headers: {
@@ -82,7 +84,7 @@ class CDEdit extends Component {
   }
 
   render() {
-    const {item, booklets, countries, types, groups} = this.state;
+    const {item, booklets, countries, types, groups, bandOrders} = this.state;
     const title = <h2>{item.id ? 'Edit CD' : 'Add CD'}</h2>;
 
     let optionBookletItems = booklets.map((booklet) =>
@@ -100,6 +102,18 @@ class CDEdit extends Component {
     let optionGroupItems = groups.map((group) =>
         <option key={group.id} value={group.cdGroupEnum}>{group.name}</option>
     );
+
+    let optionBandOrderItems = bandOrders.map((bandOrder) =>
+        <option key={bandOrder.id} value={bandOrder.cdBandOrder}>{bandOrder.name}</option>
+    );
+
+    let bandMembers = item.band.bandMembers.map((bandMember) => {
+      return " " + bandMember.name
+    });
+
+    let bandMembersDiv = item.band.bandMembers.map((bandMember) => {
+      return <div key={bandMember.name}>{bandMember.name + '\n'}</div>
+    })
 
     return <div>
       <AppNavbar/>
@@ -121,6 +135,12 @@ class CDEdit extends Component {
             <Input type="text" name="year" id="year" value={item.year || ''}
                    onChange={this.handleChange} autoComplete="address-level1"/>
           </FormGroup>
+          <FormGroup>
+            <Label for="year">Band Members</Label>
+            <Input type="text" name="bandMambers" id="band" value={bandMembers || ''}
+                   onChange={this.handleChangeForBand} autoComplete="address-level1"/>
+          </FormGroup>
+          {bandMembersDiv}
           <div className="row">
             <FormGroup className="col-md-2 mb-3">
               <Label for="booklet">Booklet</Label>
@@ -148,6 +168,13 @@ class CDEdit extends Component {
               <Input type="select" name="cdGroup" id="cdGroup" value={item.cdGroup || ''}
                      onChange={this.handleChange} autoComplete="address-level1">
                 {optionGroupItems}
+              </Input>
+            </FormGroup>
+            <FormGroup className="col-md-2 mb-3">
+              <Label for="countryEdition">Order</Label>
+              <Input type="select" name="order" id="band" value={item.band.order || ''}
+                     onChange={this.handleChangeForBand} autoComplete="address-level1">
+                {optionBandOrderItems}
               </Input>
             </FormGroup>
           </div>

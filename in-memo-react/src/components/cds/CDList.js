@@ -1,14 +1,28 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Container, Table } from 'reactstrap';
+import { Collapse, Button, ButtonGroup, Container, Table, Form, FormGroup, Input, Label, Card, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
 import AppNavbar from '../../common/AppNavbar';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 class CDList extends Component{
 
     constructor(props){
         super(props);
-        this.state = {cds: [], isLoading: true};
+        this.state = {
+          cds: [], 
+          isLoading: true,
+          collapseUpload: false,
+          collapseDownload: false,
+          file: null,
+          rewriteDB: false
+        };
+        this.toggle = this.toggle.bind(this);
         this.remove = this.remove.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.fileUpload = this.fileUpload.bind(this);
+        this.onChange = this.onChange.bind(this)
+        this.downloadFile = this.downloadFile.bind(this)
     }
 
     componentDidMount(){
@@ -16,7 +30,7 @@ class CDList extends Component{
         if (this.props.group === 'all'){
           fetch('api/cds')
           .then(response => response.json())
-          .then(data => this.setState({cds: data, isLoading: false}));
+          .then(data => this.setState({cds: data, isLoading: false}))
         } else if (this.props.group === 'foreign'){
           fetch('api/cdsForeign')
           .then(response => response.json())
@@ -27,6 +41,28 @@ class CDList extends Component{
           .then(data => this.setState({cds: data, isLoading: false}));
         }
         
+    }
+
+    toggle(button) {
+      if (button === "upload"){
+        if (this.state.collapseDownload){
+          this.setState(state => ({
+            collapseDownload: !state.collapseDownload
+          }));
+        }
+        this.setState(state => ({ 
+          collapseUpload: !state.collapseUpload
+        }));
+      } else if (button === "download"){
+        if (this.state.collapseUpload){
+          this.setState(state => ({
+            collapseUpload: !state.collapseUpload
+          }))
+        }
+        this.setState(state => ({ 
+          collapseDownload: !state.collapseDownload
+        }));
+      }
     }
 
     async remove(id) {
@@ -41,6 +77,54 @@ class CDList extends Component{
           this.setState({cds: updatedCds});
         });
       }
+
+    handleSubmit(e) {
+      e.preventDefault()
+      this.fileUpload(this.state.file)
+    }
+
+    fileUpload(file){
+      const formData = new FormData();
+      this.setState({isLoading: true});
+      formData.append('file', file)
+      formData.append('rewriteDB', this.state.rewriteDB)
+      fetch('/api/cd/upload',{
+        method: 'POST',
+        body: formData
+      }).then(
+        response => {
+          if (response.ok){
+            fetch('/api/cds')
+            .then(response => response.json())
+            .then(data => this.setState({cds: data, isLoading: false}))
+          }
+        }
+      )
+    }
+
+    onChange(e){
+      const {files} = e.target
+      this.setState({file:files[0]})
+    }
+
+    handleChange(e){
+      this.setState({rewriteDB: !this.state.rewriteDB})
+    }
+
+    downloadFile(ext){
+      fetch('/api/export/downloadCD.' + ext, {
+        method: 'GET'
+      }).then(response => response.blob())
+      .then(blob => {
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = "downloadCD." + ext;
+        document.body.appendChild(a);
+        a.click();    
+        a.remove();
+      })
+    }
 
     render(){
         const {cds, isLoading} = this.state;
@@ -84,11 +168,58 @@ class CDList extends Component{
             <div>
               <AppNavbar/>
               <Container fluid>
-                <div className="float-right">
-                  <Button color="success" tag={Link} to="/cds/new">Add CD</Button>
-                </div>
                 <h3>{cdCollection}</h3>
-                <Table className="mt-4">
+                <div className="float-left">
+                  <ButtonGroup>
+                    <Button color="outline-success" size="lg" tag={Link} to="/cds/new">Add CD</Button>
+                    <Button color="outline-info" size="lg" onClick={() => this.toggle("upload")}>Upload CDs</Button>
+                    <Button color="outline-primary" size="lg" onClick={() => this.toggle("download")}>Download</Button>
+                  </ButtonGroup>
+                  <Collapse isOpen={this.state.collapseUpload}>
+                    <Form onSubmit={this.handleSubmit}>
+                      <FormGroup>
+                        <Card>
+                          <CardBody>
+                            <Label for="upload">Excel file:</Label>
+                            <Input type="file" name="upload" onChange={this.onChange}/>
+                            <br/>
+                            <Input type="checkbox" name="rewriteDB" checked={this.state.rewriteDB} onChange={this.handleChange} style={{marginLeft: 5}}/>
+                            <Label for="rewriteDB" style={{marginLeft: 25}}>Do you want to rewrite DB?</Label>
+                            <br/>
+                            <Button color="primary" type="submit">Upload</Button>
+                          </CardBody>
+                        </Card>
+                      </FormGroup>
+                    </Form>
+                  </Collapse>
+                  <Collapse isOpen={this.state.collapseDownload}>
+                    <Form onSubmit={this.handleSubmit}>
+                      <FormGroup>
+                        <Card>
+                          <CardBody>
+                            <Nav vertical>
+                              <NavItem>
+                                <NavLink href="#" onClick={() => this.downloadFile("xls")}>XLS</NavLink>
+                              </NavItem>
+                              <NavItem>
+                                <NavLink href="#" onClick={() => this.downloadFile("xlsx")}>XLSX</NavLink>
+                              </NavItem>
+                              <NavItem>
+                                <NavLink href="#" onClick={() => this.downloadFile("pdf")}>PDF</NavLink>
+                              </NavItem>
+                              <NavItem>
+                                <NavLink href="#" onClick={() => this.downloadFile("csv")}>CSV</NavLink>
+                              </NavItem>
+                            </Nav>
+                          </CardBody>
+                        </Card>
+                      </FormGroup>
+                    </Form>
+                  </Collapse>
+                </div>
+                <br/>
+                <br/>
+                <Table striped bordered hover className="mt-4">
                   <thead>
                   <tr>
                     <th width="2%">№</th>
