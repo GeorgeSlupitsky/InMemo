@@ -12,4 +12,5 @@ public interface CDRepository extends MongoRepository<CD, Integer> {
 
     List<CD> findCDByCdGroup(CDGroup cdGroup);
 
+    List<CD> findCDByBand_Name (String bandName);
 }

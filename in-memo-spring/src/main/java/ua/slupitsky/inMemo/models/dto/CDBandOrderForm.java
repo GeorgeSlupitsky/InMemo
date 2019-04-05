@@ -1,21 +1,17 @@
-package ua.slupitsky.inMemo.models.mongo;
+package ua.slupitsky.inMemo.models.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ua.slupitsky.inMemo.models.enums.CDBandOrder;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CDBand {
+public class CDBandOrderForm {
 
+    private Integer id;
     private String name;
-
-    private CDBandOrder order;
-
-    private List<CDBandMainMember> bandMembers;
+    private CDBandOrder cdBandOrder;
 
 }

@@ -14,6 +14,8 @@ public interface CDService {
     List<CDForm> findAllCDs(ResourceBundle resourceBundle);
 
     List<CDForm> findByCDGroupWithResourceBundle(CDGroup cdGroup, ResourceBundle resourceBundle);
+    
+    List<CD> findCDsByBand_Name(String bandName);
 
     List<CD> findByCDGroup(CDGroup cdGroup);
 

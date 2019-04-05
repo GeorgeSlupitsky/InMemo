@@ -7,6 +7,7 @@ import ua.slupitsky.inMemo.models.enums.CDGroup;
 import ua.slupitsky.inMemo.models.mongo.CD;
 import ua.slupitsky.inMemo.repositories.CDRepository;
 import ua.slupitsky.inMemo.services.CDService;
+import ua.slupitsky.inMemo.sorting.CDComparator;
 
 import java.util.*;
 import java.util.List;
@@ -24,6 +25,7 @@ public class CDServiceImpl implements CDService {
     @Override
     public List<CDForm> findAllCDs(ResourceBundle resourceBundle) {
         List<CD> cdsFromDB = cdRepository.findAll();
+        cdsFromDB.sort(new CDComparator());
         return getCDFormFromEntity(cdsFromDB, resourceBundle);
     }
 
@@ -36,6 +38,11 @@ public class CDServiceImpl implements CDService {
     public List<CDForm> findByCDGroupWithResourceBundle(CDGroup cdGroup, ResourceBundle resourceBundle) {
         List<CD> cdsFromDB = cdRepository.findCDByCdGroup(cdGroup);
         return getCDFormFromEntity(cdsFromDB, resourceBundle);
+    }
+
+    @Override
+    public List<CD> findCDsByBand_Name(String bandName) {
+        return cdRepository.findCDByBand_Name(bandName);
     }
 
     @Override

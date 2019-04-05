@@ -1,8 +1,10 @@
 package ua.slupitsky.inMemo.utils;
 
 import org.apache.poi.ss.usermodel.*;
+import ua.slupitsky.inMemo.models.constants.CDIntBandOrder;
 import ua.slupitsky.inMemo.models.constants.ExcelColumnCD;
 import ua.slupitsky.inMemo.models.constants.ExcelColumnDrumStick;
+import ua.slupitsky.inMemo.models.enums.CDBandOrder;
 import ua.slupitsky.inMemo.models.mongo.CDBandMainMember;
 import ua.slupitsky.inMemo.models.enums.CDBooklet;
 import ua.slupitsky.inMemo.models.enums.ExportType;
@@ -105,7 +107,12 @@ public class ExcelGenerator {
         for(CD cd : cds){
             Row cdRow =  sheet.createRow(rowCount++);
             cdRow.createCell(ExcelColumnCD.NUMBER).setCellValue(rowCount - 1);
-            cdRow.createCell(ExcelColumnCD.ORDER).setCellValue(cd.getBand().getOrder());
+            CDBandOrder cdBandOrder = cd.getBand().getOrder();
+            if (cdBandOrder.equals(CDBandOrder.MAIN)){
+                cdRow.createCell(ExcelColumnCD.ORDER).setCellValue(CDIntBandOrder.MAIN);
+            } else {
+                cdRow.createCell(ExcelColumnCD.ORDER).setCellValue(CDIntBandOrder.SECONDARY);
+            }
             cdRow.createCell(ExcelColumnCD.BAND).setCellValue(cd.getBand().getName());
             cdRow.createCell(ExcelColumnCD.ALBUM).setCellValue(cd.getAlbum());
             cdRow.createCell(ExcelColumnCD.YEAR).setCellValue(cd.getYear());

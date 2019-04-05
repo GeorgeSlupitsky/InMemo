@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
+import ua.slupitsky.inMemo.models.constants.CDIntBandOrder;
 import ua.slupitsky.inMemo.models.constants.ExcelColumnCD;
 import ua.slupitsky.inMemo.models.constants.ExcelColumnDrumStick;
 import ua.slupitsky.inMemo.models.mongo.CDBand;
@@ -98,16 +99,7 @@ public class ExcelParser {
 
         cdsFromFile.sort(new CDComparator());
 
-        setIdToCDs(cdsFromFile);
-
         return cdsFromFile;
-    }
-
-    private static void setIdToCDs(List <CD> cdList){
-        int id = 1;
-        for (CD cd: cdList){
-            cd.setId(id++);
-        }
     }
 
     public static List<DrumStick> parseExcelForDrumSticks(MultipartFile file, boolean isXlsx) throws WrongXlsFileException, WrongXlsxFileException, WrongParseDrumStickCityException, WrongParseDrumStickTypeException, IOException {
@@ -153,13 +145,18 @@ public class ExcelParser {
                 }
 
                 String bandName = null;
-                Integer order = null;
+                CDBandOrder cdBandOrder = null;
 
                 for (Cell cell : row){
                     if (cell.getColumnIndex() != ExcelColumnCD.NUMBER) {
                         switch (cell.getColumnIndex()) {
                             case ExcelColumnCD.ORDER:
-                                order = (int) cell.getNumericCellValue();
+                                int intOrder = (int) cell.getNumericCellValue();
+                                if (intOrder == CDIntBandOrder.MAIN){
+                                    cdBandOrder = CDBandOrder.MAIN;
+                                } else {
+                                    cdBandOrder = CDBandOrder.SECONDARY;
+                                }
                                 break;
 
                             case ExcelColumnCD.BAND:
@@ -203,7 +200,7 @@ public class ExcelParser {
                                 String cellValue = cell.getStringCellValue();
                                 CDBand cdBand;
                                 if (cellValue.equals("-")){
-                                    cdBand = new CDBand(bandName, order, null);
+                                    cdBand = new CDBand(bandName, cdBandOrder, null);
                                 } else {
                                     String [] bandMembers = cell.getStringCellValue().split(", ");
                                     List<CDBandMainMember> cdBandMainMembers = new ArrayList<>();
@@ -212,7 +209,7 @@ public class ExcelParser {
                                         cdBandMainMember.setName(bandMember);
                                         cdBandMainMembers.add(cdBandMainMember);
                                     }
-                                    cdBand = new CDBand(bandName, order, cdBandMainMembers);
+                                    cdBand = new CDBand(bandName, cdBandOrder, cdBandMainMembers);
                                 }
                                 cd.setBand(cdBand);
                                 break;

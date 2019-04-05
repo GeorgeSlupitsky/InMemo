@@ -1,5 +1,6 @@
 package ua.slupitsky.inMemo.sorting;
 
+import ua.slupitsky.inMemo.models.enums.CDBandOrder;
 import ua.slupitsky.inMemo.models.enums.CDGroup;
 import ua.slupitsky.inMemo.models.mongo.CD;
 import ua.slupitsky.inMemo.models.mongo.CDBandMainMember;
@@ -13,22 +14,22 @@ public class SortingUtils {
         Map<String, List<CD>> cdMap = new LinkedHashMap<>();
 
         List<CD> cdWithMainOrderForeign = cdList.stream()
-                .filter(cd -> cd.getBand().getOrder() == 1 && cd.getCdGroup().equals(CDGroup.FOREIGN))
+                .filter(cd -> cd.getBand().getOrder().equals(CDBandOrder.MAIN) && cd.getCdGroup().equals(CDGroup.FOREIGN))
                 .sorted(Comparator.comparing(cd -> cd.getBand().getName()))
                 .collect(Collectors.toList());
 
         List<CD> cdWithMainOrderDomestic = cdList.stream()
-                .filter(cd -> cd.getBand().getOrder() == 1 && cd.getCdGroup().equals(CDGroup.DOMESTIC))
+                .filter(cd -> cd.getBand().getOrder().equals(CDBandOrder.MAIN) && cd.getCdGroup().equals(CDGroup.DOMESTIC))
                 .sorted(Comparator.comparing(cd -> cd.getBand().getName()))
                 .collect(Collectors.toList());
 
         List<CD> cdWithSecondaryOrderForeign = cdList.stream()
-                .filter(cd -> cd.getBand().getOrder() == 2 && cd.getCdGroup().equals(CDGroup.FOREIGN))
+                .filter(cd -> cd.getBand().getOrder().equals(CDBandOrder.SECONDARY) && cd.getCdGroup().equals(CDGroup.FOREIGN))
                 .sorted(Comparator.comparing(cd -> cd.getBand().getName()))
                 .collect(Collectors.toList());
 
         List<CD> cdWithSecondaryOrderDomestic = cdList.stream()
-                .filter(cd -> cd.getBand().getOrder() == 2 && cd.getCdGroup().equals(CDGroup.DOMESTIC))
+                .filter(cd -> cd.getBand().getOrder().equals(CDBandOrder.SECONDARY) && cd.getCdGroup().equals(CDGroup.DOMESTIC))
                 .sorted(Comparator.comparing(cd -> cd.getBand().getName()))
                 .collect(Collectors.toList());
 

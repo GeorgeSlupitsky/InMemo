@@ -8,12 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.slupitsky.inMemo.models.dto.*;
-import ua.slupitsky.inMemo.models.enums.CDBooklet;
-import ua.slupitsky.inMemo.models.enums.CDCountry;
-import ua.slupitsky.inMemo.models.enums.CDGroup;
-import ua.slupitsky.inMemo.models.enums.CDType;
+import ua.slupitsky.inMemo.models.enums.*;
 import ua.slupitsky.inMemo.models.mongo.CD;
 import ua.slupitsky.inMemo.services.CDService;
+import ua.slupitsky.inMemo.services.implementation.NextSequenceService;
 import ua.slupitsky.inMemo.utils.ExcelParser;
 import ua.slupitsky.inMemo.validation.exceptions.*;
 
@@ -32,9 +30,12 @@ public class CDController {
 
     private final CDService cdService;
 
+    private final NextSequenceService nextSequenceService;
+
     @Autowired
-    public CDController(CDService cdService) {
+    public CDController(CDService cdService, NextSequenceService nextSequenceService) {
         this.cdService = cdService;
+        this.nextSequenceService = nextSequenceService;
     }
 
     @ApiOperation(value = "View a list of CDs", response = Iterable.class)
@@ -64,78 +65,6 @@ public class CDController {
         return cdService.findByCDGroupWithResourceBundle(CDGroup.DOMESTIC, resourceBundle);
     }
 
-    @ApiOperation(value = "Get all CD's Booklets Enum", response = Iterable.class)
-    @GetMapping("/cds/booklets")
-    public Iterable<CDBookletForm> getAllCDBooklets(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
-        List<CDBookletForm> booklets = new ArrayList<>();
-        int id = 0;
-        for (Enum e: EnumSet.allOf(CDBooklet.class) ){
-            CDBookletForm form = new CDBookletForm();
-            CDBooklet booklet = (CDBooklet) e;
-            form.setId(id++);
-            if (booklet.getQuantityOfPages() == 0){
-                form.setName(resourceBundle.getString(booklet.getName()));
-            } else {
-                form.setName(booklet.getQuantityOfPages() + " " + resourceBundle.getString(booklet.getName()));
-            }
-            form.setCdBookletEnum(booklet);
-            booklets.add(form);
-        }
-        return booklets;
-    }
-
-    @ApiOperation(value = "Get all CD's Countries Enum", response = Iterable.class)
-    @GetMapping("/cds/countries")
-    public Iterable<CDCountryForm> getAllCDCountries(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
-        List<CDCountryForm> countries = new ArrayList<>();
-        int id = 0;
-        for (Enum e: EnumSet.allOf(CDCountry.class) ){
-            CDCountryForm form = new CDCountryForm();
-            CDCountry country = (CDCountry) e;
-            form.setId(id++);
-            form.setName(resourceBundle.getString(country.getName()));
-            form.setCdCountryEnum(country);
-            countries.add(form);
-        }
-        return countries;
-    }
-
-    @ApiOperation(value = "Get all CD's Types Enum", response = Iterable.class)
-    @GetMapping("/cds/types")
-    public Iterable<CDTypeForm> getAllCDTypes(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
-        List<CDTypeForm> types = new ArrayList<>();
-        int id = 0;
-        for (Enum e: EnumSet.allOf(CDType.class) ){
-            CDTypeForm form = new CDTypeForm();
-            CDType type = (CDType) e;
-            form.setId(id++);
-            form.setName(resourceBundle.getString(type.getName()));
-            form.setCdTypeEnum(type);
-            types.add(form);
-        }
-        return types;
-    }
-
-    @ApiOperation(value = "Get all CD's Groups Enum", response = Iterable.class)
-    @GetMapping("/cds/groups")
-    public Iterable<CDGroupForm> getAllCDGroups(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
-        List<CDGroupForm> groups = new ArrayList<>();
-        int id = 0;
-        for (Enum e: EnumSet.allOf(CDGroup.class) ){
-            CDGroupForm form = new CDGroupForm();
-            CDGroup group = (CDGroup) e;
-            form.setId(id++);
-            form.setName(resourceBundle.getString(group.getName()));
-            form.setCdGroupEnum(group);
-            groups.add(form);
-        }
-        return groups;
-    }
-
     @ApiOperation(value = "Search CD with an ID", response = CD.class)
     @RequestMapping(value = "/cd/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> showCD(@PathVariable Integer id){
@@ -147,6 +76,14 @@ public class CDController {
     @ApiOperation(value = "Add CD")
     @PostMapping(value = "/cd")
     public ResponseEntity<String> saveCD (@RequestBody CD cd){
+        cd.setId(nextSequenceService.getNextSequence("cds"));
+        if (cd.getBand().getOrder() == CDBandOrder.MAIN){
+            List <CD> cds = cdService.findCDsByBand_Name(cd.getBand().getName());
+            if (cds != null && !cds.isEmpty()){
+                cd.setIndexWeight(cds.get(0).getIndexWeight());
+            }
+            //TODO count weight index if getOrder == 2 or if cds isEmpty()
+        }
         cdService.addCD(cd);
         log.info("CD " + cd.getBand().getName() + " - " + cd.getAlbum() + " added");
         return new ResponseEntity<>("CD saved successfully", HttpStatus.OK);
@@ -188,6 +125,9 @@ public class CDController {
                 cds = ExcelParser.parseExcelForCDs(file, true);
             } else {
                 cds = ExcelParser.parseExcelForCDs(file, false);
+            }
+            for (CD cd: cds){
+                cd.setId(nextSequenceService.getNextSequence("cds"));
             }
         } catch (WrongXlsFileException e) {
             log.log(Level.SEVERE, "WrongXlsFileException: ", e);
