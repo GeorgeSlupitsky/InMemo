@@ -216,7 +216,7 @@ public class PdfView extends AbstractPdfView {
         List<DrumStick> drumSticks = (List<DrumStick>) model.get("drumSticks");
 
         @SuppressWarnings("unchecked")
-        Map<Integer, Boolean> printMap = (Map<Integer, Boolean>) model.get("printMap");
+        List<Integer> idsToPrint = (List<Integer>) model.get("idsToPrint");
 
         initParagraph(document, resourceBundle.getString("drumstick.sheetName"), false);
 
@@ -227,17 +227,18 @@ public class PdfView extends AbstractPdfView {
         int remainder = NUM_COLUMNS_DRUM_STICKS_LABELS - drumSticks.size() % NUM_COLUMNS_DRUM_STICKS_LABELS;
 
         for (DrumStick drumStick: drumSticks){
-            boolean isPrintable = printMap.get(drumStick.getId());
-            if (isPrintable){
-                Chunk bandName = new Chunk(drumStick.getBand() + "\n", fontBold);
-                Chunk info = new Chunk(formatter.format(drumStick.getDate()) + "\n"
-                        + resourceBundle.getString(drumStick.getCity().getName()) + "\n" + drumStick.getDrummerName(), fontNormal);
-                Phrase phrase = new Phrase();
-                phrase.add(bandName);
-                phrase.add(info);
-                cellCenterAlign.setPhrase(phrase);
-                cellCenterAlign.setPadding(5f);
-                table.addCell(cellCenterAlign);
+            for (Integer id: idsToPrint) {
+                if (id.equals(drumStick.getId())) {
+                    Chunk bandName = new Chunk(drumStick.getBand() + "\n", fontBold);
+                    Chunk info = new Chunk(formatter.format(drumStick.getDate()) + "\n"
+                            + resourceBundle.getString(drumStick.getCity().getName()) + "\n" + drumStick.getDrummerName(), fontNormal);
+                    Phrase phrase = new Phrase();
+                    phrase.add(bandName);
+                    phrase.add(info);
+                    cellCenterAlign.setPhrase(phrase);
+                    cellCenterAlign.setPadding(5f);
+                    table.addCell(cellCenterAlign);
+                }
             }
         }
 

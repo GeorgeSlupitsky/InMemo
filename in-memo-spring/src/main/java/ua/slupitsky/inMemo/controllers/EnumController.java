@@ -104,4 +104,37 @@ public class EnumController {
         return orders;
     }
 
+    @ApiOperation(value = "Get all DrumStick's Cities Enum", response = Iterable.class)
+    @GetMapping("/drumsticks/cities")
+    public Iterable<DrumStickCityForm> getAllDrumStickCity(Locale locale){
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        List<DrumStickCityForm> cities = new ArrayList<>();
+        int id = 0;
+        for (Enum e: EnumSet.allOf(DrumStickCity.class) ){
+            DrumStickCityForm form = new DrumStickCityForm();
+            DrumStickCity city = (DrumStickCity) e;
+            form.setId(id++);
+            form.setName(resourceBundle.getString(city.getName()));
+            form.setDrumStickCityEnum(city);
+            cities.add(form);
+        }
+        return cities;
+    }
+
+    @ApiOperation(value = "Get all DrumStick's Types Enum", response = Iterable.class)
+    @GetMapping("/drumstick/types")
+    public Iterable<DrumStickTypeForm> getAllDrumStickType(Locale locale){
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        List<DrumStickTypeForm> types = new ArrayList<>();
+        int id = 0;
+        for (Enum e: EnumSet.allOf(DrumStickType.class) ){
+            DrumStickTypeForm form = new DrumStickTypeForm();
+            DrumStickType type = (DrumStickType) e;
+            form.setId(id++);
+            form.setName(resourceBundle.getString(type.getName()));
+            form.setDrumStickTypeEnum(type);
+            types.add(form);
+        }
+        return types;
+    }
 }

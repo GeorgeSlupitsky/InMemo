@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ua.slupitsky.inMemo.models.enums.CDGroup;
 import ua.slupitsky.inMemo.models.enums.ExportType;
 import ua.slupitsky.inMemo.models.mongo.DrumStick;
@@ -55,16 +53,12 @@ public class ExportController {
 
     @ApiOperation(value = "Download Drum Stick Labels file")
     @ApiParam(value = "ext", required = true, allowableValues = "pdf")
-    @GetMapping("/downloadDrumSticksLabels.{ext}")
-    public String downloadDrumSticksLabels(Model model, @PathVariable String ext) {
+    @PostMapping("/downloadDrumSticksLabels.{ext}")
+    public String downloadDrumSticksLabels(Model model, @PathVariable String ext, @RequestBody List<Integer> idsToPrint) {
         List<DrumStick> drumSticks = drumStickService.findAllDrumSticks();
         model.addAttribute("drumSticks", drumSticks);
         model.addAttribute("typeOfExport", ExportType.DRUM_STICK_LABELS.getName());
-        Map<Integer, Boolean> printMap = new HashMap<>();
-        for (DrumStick drumStick: drumSticks){
-            printMap.put(drumStick.getId(), true);
-        }
-        model.addAttribute("printMap", printMap);
+        model.addAttribute("idsToPrint", idsToPrint);
         return "";
     }
 
