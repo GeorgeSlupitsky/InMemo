@@ -2,35 +2,48 @@ import React, { Component } from 'react';
 import './App.css';
 import Home from '../components/home/Home';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import CDList from '../components/cds/CDList'
-import CDEdit from '../components/cds/CDEdit'
-import DrumStickList from '../components/drumsticks/DrumStickList'
-import DrumStickEdit from '../components/drumsticks/DrumStickEdit'
+import CDEdit from '../components/items/CDEdit'
+import DrumStickEdit from '../components/items/DrumStickEdit'
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
+import ItemList from '../components/items/ItemList';
 
 class App extends Component {
-    render() {
-      const WrappedCDListForAll = function(props) {
-        return (<CDList {...props} group='all'/>)
-      }
-      const WrappedCDListForForeign = function(props) {
-        return (<CDList {...props} group='foreign'/>)
-      }
-      const WrappedCDListForDomestic = function(props) {
-        return (<CDList {...props} group='domestic'/>)
-      }
+  render() {
+    const WrappedCDListForAll = function (props) {
+      return (<ItemList {...props} group='all' collection='My CD Collection' getURL='api/cds' deleteURL='/api/cd/' />)
+    }
+    const WrappedCDListForForeign = function (props) {
+      return (<ItemList {...props} group='foreign' collection='My Foreign CD Collection' getURL='api/cdsForeign' deleteURL='/api/cd/' />)
+    }
+    const WrappedCDListForDomestic = function (props) {
+      return (<ItemList {...props} group='domestic' collection='My Domestic CD Collection' getURL='api/cdsDomestic' deleteURL='/api/cd/' />)
+    }
+    const WrappedDrumStickList = function (props) {
+      return (<ItemList {...props} group='drumsticks' collection='My Drumstick Collection' getURL='api/drumsticks' deleteURL='/api/drumstick/' />)
+    }
+    const WrappedCDEditForAll = function (props) {
+      return (<CDEdit {...props} url='/cds' />)
+    }
+    const WrappedCDEditForForeign = function (props) {
+      return (<CDEdit {...props} url='/cdsForeign' />)
+    }
+    const WrappedCDEditForDomestic = function (props) {
+      return (<CDEdit {...props} url='/cdsDomestic' />)
+    }
     return (
       <div>
         <Router>
           <Switch>
-            <Route path='/' exact={true} component={Home}/>
-            <Route path='/cds' exact={true} component={WrappedCDListForAll}/>
-            <Route path='/cdsForeign' exact={true} component={WrappedCDListForForeign}/>
-            <Route path='/cdsDomestic' exact={true} component={WrappedCDListForDomestic}/>
-            <Route path='/cds/:id' component={CDEdit}/>
-            <Route path='/drumsticks' exact={true} component={DrumStickList}/>
-            <Route path='/drumsticks/:id' component={DrumStickEdit}/>
+            <Route path='/' exact={true} component={Home} />
+            <Route path='/cds' exact={true} component={WrappedCDListForAll} />
+            <Route path='/cdsForeign' exact={true} component={WrappedCDListForForeign} />
+            <Route path='/cdsDomestic' exact={true} component={WrappedCDListForDomestic} />
+            <Route path='/cds/:id' component={WrappedCDEditForAll} />
+            <Route path='/cdsForeign/:id' component={WrappedCDEditForForeign} />
+            <Route path='/cdsDomestic/:id' component={WrappedCDEditForDomestic} />
+            <Route path='/drumsticks' exact={true} component={WrappedDrumStickList} />
+            <Route path='/drumsticks/:id' component={DrumStickEdit} />
           </Switch>
         </Router>
       </div>
