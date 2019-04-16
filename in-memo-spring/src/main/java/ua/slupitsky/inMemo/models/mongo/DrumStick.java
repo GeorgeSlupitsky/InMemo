@@ -1,5 +1,7 @@
 package ua.slupitsky.inMemo.models.mongo;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +10,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import ua.slupitsky.inMemo.models.enums.DrumStickCity;
 import ua.slupitsky.inMemo.models.enums.DrumStickType;
+import ua.slupitsky.inMemo.utils.LocalDateDeserializer;
+import ua.slupitsky.inMemo.utils.LocalDateSerializer;
 
 import java.time.LocalDate;
 
@@ -28,6 +32,8 @@ public class DrumStick {
     private String drummerName;
 
     @ApiModelProperty(notes = "Date of receiving Drum Stick")
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate date;
 
     @ApiModelProperty(notes = "Name of city, where the concert was")

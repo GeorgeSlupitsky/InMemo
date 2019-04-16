@@ -37,19 +37,13 @@ public class CsvView extends AbstractCsvView{
 
         String type = (String) model.get("typeOfExport");
 
-        String name = null;
-
         if (type != null){
             if (type.equals(ExportType.CD.getName())){
-                name = resourceBundle.getString("cd.filename");
                 buildCsvForCDs(model);
             } else if (type.equals(ExportType.DRUM_STICK.getName())){
-                name = resourceBundle.getString("drumstick.filename");
                 buildCsvForDrumSticks(model);
             }
         }
-
-        Utils.setDownloadFileInfo(name, request, response, Extentions.CSV);
     }
 
     private void buildCsvForCDs (Map<String, Object> model) throws Exception{

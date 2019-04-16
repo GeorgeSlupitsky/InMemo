@@ -10,7 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.slupitsky.inMemo.models.dto.DrumStickForm;
 import ua.slupitsky.inMemo.models.mongo.DrumStick;
 import ua.slupitsky.inMemo.services.DrumStickService;
+import ua.slupitsky.inMemo.services.implementation.NextSequenceService;
 import ua.slupitsky.inMemo.utils.ExcelParser;
+import ua.slupitsky.inMemo.utils.Utils;
 import ua.slupitsky.inMemo.validation.exceptions.WrongParseDrumStickCityException;
 import ua.slupitsky.inMemo.validation.exceptions.WrongParseDrumStickTypeException;
 import ua.slupitsky.inMemo.validation.exceptions.WrongXlsFileException;
@@ -18,7 +20,6 @@ import ua.slupitsky.inMemo.validation.exceptions.WrongXlsxFileException;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,9 +33,12 @@ public class DrumStickController {
 
     private final DrumStickService drumStickService;
 
+    private final NextSequenceService nextSequenceService;
+
     @Autowired
-    public DrumStickController(DrumStickService drumStickService) {
+    public DrumStickController(DrumStickService drumStickService, NextSequenceService nextSequenceService) {
         this.drumStickService = drumStickService;
+        this.nextSequenceService = nextSequenceService;
     }
 
     @ApiOperation(value = "View a list of Drum Sticks", response = Iterable.class)
@@ -46,7 +50,7 @@ public class DrumStickController {
     })
     @GetMapping(value = "/drumsticks")
     public Iterable<DrumStickForm> getDrumStickList(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
         return drumStickService.findAllDrumSticksWithBundle(resourceBundle);
     }
 
@@ -61,6 +65,7 @@ public class DrumStickController {
     @ApiOperation(value = "Add Drum Stick")
     @PostMapping(value = "/drumstick")
     public ResponseEntity<String> saveDrumStick (@Valid @RequestBody DrumStick drumStick){
+        drumStick.setId(nextSequenceService.getNextSequence("drumsticks"));
         drumStickService.addDrumStick(drumStick);
         log.info("DrumStick " + drumStick.getBand() + " - " + drumStick.getDrummerName() + " added");
         return new ResponseEntity<>("Drum Stick saved successfully", HttpStatus.OK);
@@ -103,6 +108,9 @@ public class DrumStickController {
                 drumSticks = ExcelParser.parseExcelForDrumSticks(file, true);
             } else {
                 drumSticks = ExcelParser.parseExcelForDrumSticks(file, false);
+            }
+            for (DrumStick drumStick: drumSticks){
+                drumStick.setId(nextSequenceService.getNextSequence("drumsticks"));
             }
         } catch (WrongXlsFileException e) {
             log.log(Level.SEVERE, "WrongXlsFileException: ", e);

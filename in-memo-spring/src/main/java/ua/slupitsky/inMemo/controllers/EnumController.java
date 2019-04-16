@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ua.slupitsky.inMemo.models.dto.*;
 import ua.slupitsky.inMemo.models.enums.*;
+import ua.slupitsky.inMemo.utils.Utils;
 
 import java.util.*;
 
@@ -18,7 +19,7 @@ public class EnumController {
     @ApiOperation(value = "Get all CD's Booklets Enum", response = Iterable.class)
     @GetMapping("/cds/booklets")
     public Iterable<CDBookletForm> getAllCDBooklets(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
         List<CDBookletForm> booklets = new ArrayList<>();
         int id = 0;
         for (Enum e: EnumSet.allOf(CDBooklet.class) ){
@@ -39,7 +40,7 @@ public class EnumController {
     @ApiOperation(value = "Get all CD's Countries Enum", response = Iterable.class)
     @GetMapping("/cds/countries")
     public Iterable<CDCountryForm> getAllCDCountries(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
         List<CDCountryForm> countries = new ArrayList<>();
         int id = 0;
         for (Enum e: EnumSet.allOf(CDCountry.class) ){
@@ -56,7 +57,7 @@ public class EnumController {
     @ApiOperation(value = "Get all CD's Types Enum", response = Iterable.class)
     @GetMapping("/cds/types")
     public Iterable<CDTypeForm> getAllCDTypes(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
         List<CDTypeForm> types = new ArrayList<>();
         int id = 0;
         for (Enum e: EnumSet.allOf(CDType.class) ){
@@ -73,7 +74,7 @@ public class EnumController {
     @ApiOperation(value = "Get all CD's Groups Enum", response = Iterable.class)
     @GetMapping("/cds/groups")
     public Iterable<CDGroupForm> getAllCDGroups(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
         List<CDGroupForm> groups = new ArrayList<>();
         int id = 0;
         for (Enum e: EnumSet.allOf(CDGroup.class) ){
@@ -90,7 +91,7 @@ public class EnumController {
     @ApiOperation(value = "Get all CD's Band Order Enum", response = Iterable.class)
     @GetMapping("/cds/band/orders")
     public Iterable<CDBandOrderForm> getAllCDBandOrders(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
         List<CDBandOrderForm> orders = new ArrayList<>();
         int id = 0;
         for (Enum e: EnumSet.allOf(CDBandOrder.class) ){
@@ -107,7 +108,7 @@ public class EnumController {
     @ApiOperation(value = "Get all DrumStick's Cities Enum", response = Iterable.class)
     @GetMapping("/drumsticks/cities")
     public Iterable<DrumStickCityForm> getAllDrumStickCity(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
         List<DrumStickCityForm> cities = new ArrayList<>();
         int id = 0;
         for (Enum e: EnumSet.allOf(DrumStickCity.class) ){
@@ -124,7 +125,7 @@ public class EnumController {
     @ApiOperation(value = "Get all DrumStick's Types Enum", response = Iterable.class)
     @GetMapping("/drumstick/types")
     public Iterable<DrumStickTypeForm> getAllDrumStickType(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
         List<DrumStickTypeForm> types = new ArrayList<>();
         int id = 0;
         for (Enum e: EnumSet.allOf(DrumStickType.class) ){

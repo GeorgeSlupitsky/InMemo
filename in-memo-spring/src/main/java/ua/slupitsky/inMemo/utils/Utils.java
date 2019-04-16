@@ -9,8 +9,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class Utils {
+
+    public static Locale getCorrectLocale(Locale locale){
+        String language = locale.getLanguage();
+        Locale correctLocale;
+        switch (language){
+            case "uk":
+                correctLocale = new Locale("ua","UA");
+                break;
+            case "es":
+                correctLocale = new Locale("es", "ES");
+                break;
+            case "ja":
+                correctLocale = new Locale("jp","JP");
+                break;
+            case "ru":
+                correctLocale = new Locale("ru", "RU");
+                break;
+            default:
+                correctLocale = new Locale("en", "EN");
+                break;
+        }
+
+        return correctLocale;
+    }
 
     public static StringBuilder iterateCDBandMembers(List<CDBandMainMember> bandMainMembers) {
         StringBuilder members = new StringBuilder();
@@ -24,31 +49,6 @@ public class Utils {
             }
         }
         return members;
-    }
-
-    public static void setDownloadFileInfo(String name, HttpServletRequest request, HttpServletResponse response, Extentions extentions) {
-        String browserName = getBrowserName(request);
-
-        if(browserName.equals("Chrome")) {
-            response.setHeader("Content-Disposition", "attachment; filename=" + name);
-        } else {
-            if (extentions.equals(Extentions.XLS)){
-                response.setHeader("Content-Disposition","attachment; filename=" + name + ".xls");
-            } else if (extentions.equals(Extentions.XLSX)) {
-                response.setHeader("Content-Disposition", "attachment; filename=" + name + ".xlsx");
-            } else if (extentions.equals(Extentions.PDF)){
-                response.setHeader("Content-Disposition","attachment; filename=" + name + ".pdf");
-            } else if (extentions.equals(Extentions.CSV)){
-                response.setHeader("Content-Disposition","attachment; filename=" + name + ".csv");
-            }
-        }
-    }
-
-    private static String getBrowserName(HttpServletRequest request){
-        UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
-        Browser browser = userAgent.getBrowser();
-
-        return browser.getName();
     }
 
 }

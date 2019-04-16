@@ -13,6 +13,7 @@ import ua.slupitsky.inMemo.models.mongo.CD;
 import ua.slupitsky.inMemo.services.CDService;
 import ua.slupitsky.inMemo.services.implementation.NextSequenceService;
 import ua.slupitsky.inMemo.utils.ExcelParser;
+import ua.slupitsky.inMemo.utils.Utils;
 import ua.slupitsky.inMemo.validation.exceptions.*;
 
 import javax.validation.Valid;
@@ -47,21 +48,21 @@ public class CDController {
     })
     @GetMapping("/cds")
     public Iterable<CDForm> getCDList(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
         return cdService.findAllCDs(resourceBundle);
     }
 
     @ApiOperation(value = "View a foreign list of CDs", response = Iterable.class)
     @GetMapping("/cdsForeign")
     public Iterable<CDForm> getForeignCDList(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
         return cdService.findByCDGroupWithResourceBundle(CDGroup.FOREIGN, resourceBundle);
     }
 
     @ApiOperation(value = "View a domestic list of CDs", response = Iterable.class)
     @GetMapping("/cdsDomestic")
     public Iterable<CDForm> getDomesticCDList(Locale locale){
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
         return cdService.findByCDGroupWithResourceBundle(CDGroup.DOMESTIC, resourceBundle);
     }
 
@@ -75,7 +76,7 @@ public class CDController {
 
     @ApiOperation(value = "Add CD")
     @PostMapping(value = "/cd")
-    public ResponseEntity<String> saveCD (@RequestBody CD cd){
+    public ResponseEntity<String> saveCD (@Valid @RequestBody CD cd){
         cd.setId(nextSequenceService.getNextSequence("cds"));
         if (cd.getBand().getOrder() == CDBandOrder.MAIN){
             List <CD> cds = cdService.findCDsByBand_Name(cd.getBand().getName());

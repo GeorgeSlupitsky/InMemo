@@ -28,7 +28,7 @@ public class ExcelGenerator {
     private static ResourceBundle resourceBundle;
 
     public static void buildExcelDocument(Map<String, Object> model, Workbook workbook, HttpServletRequest request, HttpServletResponse response, Locale locale, boolean isXLS){
-        resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
 
         style = workbook.createCellStyle();
         Font font = workbook.createFont();
@@ -62,13 +62,6 @@ public class ExcelGenerator {
         if (!domesticCDs.isEmpty()){
             String domestic = resourceBundle.getString("cd.group.domestic");
             createExcelSheetForCD(workbook, domesticCDs, domestic);
-        }
-
-        String name = resourceBundle.getString("cd.filename");
-        if (isXLS){
-            Utils.setDownloadFileInfo(name, request, response, Extentions.XLS);
-        } else {
-            Utils.setDownloadFileInfo(name, request, response, Extentions.XLSX);
         }
     }
 
@@ -171,13 +164,6 @@ public class ExcelGenerator {
             }
             drumStickRow.createCell(4).setCellValue(resourceBundle.getString(drumStick.getCity().getName()));
             drumStickRow.createCell(5).setCellValue(resourceBundle.getString(drumStick.getDescription().getName()));
-        }
-
-        String name = resourceBundle.getString("drumstick.filename");
-        if (isXLS){
-            Utils.setDownloadFileInfo(name, request, response, Extentions.XLS);
-        } else {
-            Utils.setDownloadFileInfo(name, request, response, Extentions.XLSX);
         }
     }
 

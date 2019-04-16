@@ -42,31 +42,21 @@ public class PdfView extends AbstractPdfView {
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Locale locale = RequestContextUtils.getLocale(request);
-        Locale localeUA = new Locale("ua", "UA");
-        Locale localeES = new Locale("es", "ES");
-        Locale localeEN = new Locale("en", "US");
-        Locale localeJP = new Locale("jp", "JP");
-        resourceBundle = ResourceBundle.getBundle("InMemo", locale);
+        resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
 
         initFonts();
         initCells();
 
         String type = (String) model.get("typeOfExport");
 
-        String name = null;
-
         if (type.equals(ExportType.CD.getName())){
-            name = resourceBundle.getString("cd.filename");
             buildPdfForCDs(model, document);
         } else if (type.equals(ExportType.DRUM_STICK.getName())){
-            name = resourceBundle.getString("drumstick.filename");
             buildPdfForDrumSticks(model, document);
         } else if (type.equals(ExportType.DRUM_STICK_LABELS.getName())){
-            name = resourceBundle.getString("drumstick.filename.labels");
             buildPdfForDrumSticksLabels(model, document);
         }
 
-        Utils.setDownloadFileInfo(name, request, response, Extentions.PDF);
     }
 
     private void buildPdfForCDs (Map<String, Object> model, Document document) throws Exception{

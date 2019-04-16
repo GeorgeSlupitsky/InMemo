@@ -222,14 +222,11 @@ public class ExcelParser {
     }
 
     private static void parseDrumStickWithLocal(Sheet sheet, ResourceBundle resourceBundle, List<DrumStick> drumSticksFromFile) throws WrongParseDrumStickCityException, WrongParseDrumStickTypeException {
-        int id = 1;
-
         for (Row row: sheet){
 
             if (row.getRowNum() != rowHeader) {
 
                 DrumStick drumStick = new DrumStick();
-                drumStick.setId(id++);
 
                 for (Cell cell: row){
                     if (cell.getColumnIndex() != ExcelColumnDrumStick.NUMBER){
