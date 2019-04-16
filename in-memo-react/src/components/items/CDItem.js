@@ -1,6 +1,7 @@
-import React from "react";
-import { Button, ButtonGroup } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import React from "react"
+import { Button, ButtonGroup } from 'reactstrap'
+import { Link } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
 
 function CDItem(props) {
     const { cd, number } = props
@@ -25,8 +26,12 @@ function CDItem(props) {
             <td>{bandMembers}</td>
             <td>
                 <ButtonGroup>
-                    <Button size="sm" color="primary" tag={Link} to={props.editLink + cd.id}>Edit</Button>
-                    <Button size="sm" color="danger" onClick={() => props.removeItem(cd.id)}>Delete</Button>
+                    <Button size="sm" color="primary" tag={Link} to={props.editLink + cd.id}>
+                        <FormattedMessage id="Item.edit" defaultMessage="Edit" />
+                    </Button>
+                    <Button size="sm" color="danger" onClick={() => props.removeItem(cd.id)}>
+                        <FormattedMessage id="Item.delete" defaultMessage="Delete" />
+                    </Button>
                 </ButtonGroup>
             </td>
         </tr>

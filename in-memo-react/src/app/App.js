@@ -1,26 +1,26 @@
-import React, { Component } from 'react';
-import './App.css';
-import Home from '../components/home/Home';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { Component } from 'react'
+import './App.css'
+import Home from '../components/home/Home'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import CDEdit from '../components/items/CDEdit'
 import DrumStickEdit from '../components/items/DrumStickEdit'
-import 'react-s-alert/dist/s-alert-default.css';
-import 'react-s-alert/dist/s-alert-css-effects/slide.css';
-import ItemList from '../components/items/ItemList';
+import 'react-s-alert/dist/s-alert-default.css'
+import 'react-s-alert/dist/s-alert-css-effects/slide.css'
+import ItemList from '../components/items/ItemList'
 
 class App extends Component {
   render() {
     const WrappedCDListForAll = function (props) {
-      return (<ItemList {...props} group='all' collection='My CD Collection' getURL='api/cds' deleteURL='/api/cd/' />)
+      return (<ItemList {...props} group='all' getURL='api/cds' deleteURL='/api/cd/' />)
     }
     const WrappedCDListForForeign = function (props) {
-      return (<ItemList {...props} group='foreign' collection='My Foreign CD Collection' getURL='api/cdsForeign' deleteURL='/api/cd/' />)
+      return (<ItemList {...props} group='foreign' getURL='api/cdsForeign' deleteURL='/api/cd/' />)
     }
     const WrappedCDListForDomestic = function (props) {
-      return (<ItemList {...props} group='domestic' collection='My Domestic CD Collection' getURL='api/cdsDomestic' deleteURL='/api/cd/' />)
+      return (<ItemList {...props} group='domestic' getURL='api/cdsDomestic' deleteURL='/api/cd/' />)
     }
     const WrappedDrumStickList = function (props) {
-      return (<ItemList {...props} group='drumsticks' collection='My Drumstick Collection' getURL='api/drumsticks' deleteURL='/api/drumstick/' />)
+      return (<ItemList {...props} group='drumsticks' getURL='api/drumsticks' deleteURL='/api/drumstick/' />)
     }
     const WrappedCDEditForAll = function (props) {
       return (<CDEdit {...props} url='/cds' />)
@@ -51,4 +51,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default App

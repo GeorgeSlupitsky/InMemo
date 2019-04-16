@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import '../../app/App.css';
-import AppNavbar from '../../common/AppNavbar';
-import { Link } from 'react-router-dom';
-import { Button, Container } from 'reactstrap';
+import React, { Component } from 'react'
+import '../../app/App.css'
+import AppNavbar from '../../common/AppNavbar'
+import { Link } from 'react-router-dom'
+import { Button, Container } from 'reactstrap'
+import { FormattedMessage } from 'react-intl'
 
 class Home extends Component {
   render() {
@@ -10,20 +11,44 @@ class Home extends Component {
       <div>
         <AppNavbar />
         <Container fluid>
-          <Button color="link"><Link to="/cds">Manage CDs</Link></Button>
+          <Button color="link">
+            <Link to="/cds">
+              <FormattedMessage 
+                id="Home.manageCDs"
+                defaultMessage="Manage CDs"/>
+            </Link>
+          </Button>
         </Container>
         <Container fluid>
-          <Button color="link"><Link to="/cdsForeign">Manage Foreign CDs</Link></Button>
+          <Button color="link">
+            <Link to="/cdsForeign">
+            <FormattedMessage 
+                id="Home.manageForeignCDs"
+                defaultMessage="Manage Foreign CDs"/>
+          </Link>
+          </Button>
         </Container>
         <Container fluid>
-          <Button color="link"><Link to="/cdsDomestic">Manage Domestic CDs</Link></Button>
+          <Button color="link">
+            <Link to="/cdsDomestic">
+            <FormattedMessage 
+                id="Home.manageDomesticCDs"
+                defaultMessage="Manage Domestic CDs"/> 
+          </Link>
+          </Button>
         </Container>
         <Container fluid>
-          <Button color="link"><Link to="/drumsticks">Manage Drumsticks</Link></Button>
+          <Button color="link">
+            <Link to="/drumsticks">
+            <FormattedMessage 
+                id="Home.manageDrumsticks"
+                defaultMessage="Manage Drumsticks CDs"/> 
+              </Link>
+          </Button>
         </Container>
       </div>
-    );
+    )
   }
 }
 
-export default Home;
+export default Home

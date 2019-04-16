@@ -1,15 +1,18 @@
-import React, { Component } from 'react';
-import { Collapse, Button, ButtonGroup, Form, FormGroup, Input, Label, Card, CardBody, Nav, NavItem, NavLink } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react'
+import { Collapse, Button, ButtonGroup, Form, FormGroup, Input, Label, Card, CardBody, Nav, NavItem, NavLink } from 'reactstrap'
+import { Link } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
+import LocalizedStrings from 'localized-strings'
 
 class ButtonsPanel extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             collapseUpload: false,
             collapseDownload: false,
             file: null,
-            rewriteDB: false
+            rewriteDB: false,
+            messages: {}
         }
         this.toggle = this.toggle.bind(this)
         this.onChangeFile = this.onChangeFile.bind(this)
@@ -20,16 +23,50 @@ class ButtonsPanel extends Component {
         this.printLabels = this.printLabels.bind(this)
     }
 
+    componentDidMount() {
+        let messages = new LocalizedStrings({
+            en: {
+                fileNameCDs: 'CD.',
+                fileNameDrumSticks: 'Drumsticks.',
+                fileNameDrumSticksLabels: 'Drumsticks (labels).pdf',
+            },
+            es: {
+                fileNameCDs: 'CD.',
+                fileNameDrumSticks: 'Baquetas.',
+                fileNameDrumSticksLabels: 'Baquetas (etiquetas).pdf',
+            },
+            ru: {
+                fileNameCDs: 'Компакт диски.',
+                fileNameDrumSticks: 'Барабанные палочки.',
+                fileNameDrumSticksLabels: 'Барабанные палочки (лейблы).pdf',
+            },
+            uk: {
+                fileNameCDs: 'Компакт диски.',
+                fileNameDrumSticks: 'Барабанні палочки.',
+                fileNameDrumSticksLabels: 'Барабанні палочки (лейбли).pdf',
+            },
+            ja: {
+                fileNameCDs: 'CD.',
+                fileNameDrumSticks: 'ドラムスティック.',
+                fileNameDrumSticksLabels: 'ドラムスティック (ラベル).pdf',
+            }
+        })
+
+        this.setState({
+            messages: messages
+        })
+    }
+
     toggle(button) {
         if (button === "upload") {
             if (this.state.collapseDownload) {
                 this.setState(state => ({
                     collapseDownload: !state.collapseDownload
-                }));
+                }))
             }
             this.setState(state => ({
                 collapseUpload: !state.collapseUpload
-            }));
+            }))
         } else if (button === "download") {
             if (this.state.collapseUpload) {
                 this.setState(state => ({
@@ -38,7 +75,7 @@ class ButtonsPanel extends Component {
             }
             this.setState(state => ({
                 collapseDownload: !state.collapseDownload
-            }));
+            }))
         }
     }
 
@@ -61,7 +98,7 @@ class ButtonsPanel extends Component {
     }
 
     fileUpload(file, postURL) {
-        const formData = new FormData();
+        const formData = new FormData()
         formData.append('file', file)
         formData.append('rewriteDB', this.state.rewriteDB)
         fetch(postURL, {
@@ -81,13 +118,13 @@ class ButtonsPanel extends Component {
             method: 'GET'
         }).then(response => response.blob())
             .then(blob => {
-                var url = window.URL.createObjectURL(blob);
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = fileName + ext;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
+                var url = window.URL.createObjectURL(blob)
+                var a = document.createElement('a')
+                a.href = url
+                a.download = fileName + ext
+                document.body.appendChild(a)
+                a.click()
+                a.remove()
             })
     }
 
@@ -101,38 +138,47 @@ class ButtonsPanel extends Component {
             body: JSON.stringify(checkedIds)
         }).then(response => response.blob())
             .then(blob => {
-                var url = window.URL.createObjectURL(blob);
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = "printLabels.pdf";
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
+                var url = window.URL.createObjectURL(blob)
+                var a = document.createElement('a')
+                a.href = url
+                a.download = this.state.messages.fileNameDrumSticksLabels
+                document.body.appendChild(a)
+                a.click()
+                a.remove()
             })
     }
 
     render() {
-        let getURL, fileName, addLink, add, upload
+        let getURL, fileName, add, upload
         const { collection } = this.props
         if (collection === 'cds') {
             getURL = '/api/export/downloadCD.'
-            fileName = 'downloadCD.'
-            add = 'Add CD'
-            upload = 'Upload CDs'
+            fileName = this.state.messages.fileNameCDs
+            add = <FormattedMessage id="ButtonsPanel.cdAdd" defaultMessage="Add CD" />
+            upload = <FormattedMessage id="ButtonsPanel.cdUpload" defaultMessage="Upload CDs" />
         } else if (collection === 'drumsticks') {
             getURL = '/api/export/downloadDrumStick.'
-            fileName = 'downloadDrumStick.'
-            add = 'Add Drumstick'
-            upload = 'Upload DrumSticks'
+            fileName = this.state.messages.fileNameDrumSticks
+            add = <FormattedMessage id="ButtonsPanel.drumstickAdd" defaultMessage="Add Drumstick" />
+            upload = <FormattedMessage id="ButtonsPanel.drumstickUpload" defaultMessage="Upload Drumsticks" />
         }
+
         return (
             <div className="float-left">
                 <ButtonGroup>
-                    <Button color="outline-success" size="lg" tag={Link} to={this.props.addLink}>{add}</Button>
-                    <Button color="outline-info" size="lg" onClick={() => this.toggle('upload')}>{upload}</Button>
-                    <Button color="outline-primary" size="lg" onClick={() => this.toggle('download')}>Download</Button>
+                    <Button color="outline-success" size="lg" tag={Link} to={this.props.addLink}>
+                        {add}
+                    </Button>
+                    <Button color="outline-info" size="lg" onClick={() => this.toggle('upload')}>
+                        {upload}
+                    </Button>
+                    <Button color="outline-primary" size="lg" onClick={() => this.toggle('download')}>
+                        <FormattedMessage id="ButtonsPanel.download" defaultMessage="Download" />
+                    </Button>
                     {collection === 'drumsticks' ? (
-                        <Button color="outline-warning" size="lg" onClick={() => this.printLabels(this.props.drumstickCheckedIds)}>Print</Button>
+                        <Button color="outline-warning" size="lg" onClick={() => this.printLabels(this.props.drumstickCheckedIds)}>
+                            <FormattedMessage id="ButtonsPanel.print" defaultMessage="Print" />
+                        </Button>
                     ) : null}
                 </ButtonGroup>
                 <Collapse isOpen={this.state.collapseUpload}>
@@ -140,13 +186,19 @@ class ButtonsPanel extends Component {
                         <FormGroup>
                             <Card>
                                 <CardBody>
-                                    <Label for="upload">Excel file:</Label>
+                                    <Label for="upload">
+                                        <FormattedMessage id="ButtonsPanel.excelFile" defaultMessage="Excel file:" />
+                                    </Label>
                                     <Input type="file" name="upload" onChange={this.onChangeFile} />
                                     <br />
                                     <Input type="checkbox" name="rewriteDB" checked={this.state.rewriteDB} onChange={this.handleChangeCheckbox} style={{ marginLeft: 5 }} />
-                                    <Label for="rewriteDB" style={{ marginLeft: 25 }}>Do you want to rewrite DB?</Label>
+                                    <Label for="rewriteDB" style={{ marginLeft: 25 }}>
+                                        <FormattedMessage id="ButtonsPanel.rewriteDB" defaultMessage="Rewrite DB?" />
+                                    </Label>
                                     <br />
-                                    <Button color="primary" type="submit">Upload</Button>
+                                    <Button color="primary" type="submit">
+                                        <FormattedMessage id="ButtonsPanel.upload" defaultMessage="Upload" />
+                                    </Button>
                                 </CardBody>
                             </Card>
                         </FormGroup>
