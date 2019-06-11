@@ -1,0 +1,14 @@
+{
+  "name": "react-practice",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  },
+  "scripts": {
+    "client": "cd in-memo-react && yarn start",
+    "server": "cd in-memo-spring && mvn spring-boot:run",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+  }
+}
