@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { Button, Container, FormGroup, Label } from 'reactstrap'
-import AppNavbar from '../../common/AppNavbar'
+import AppNavbar from '../common/AppNavbar'
 import { FormattedMessage } from 'react-intl'
 import { AvGroup, AvForm, AvField, AvInput, AvFeedback } from 'availity-reactstrap-validation'
 import LocalizedStrings from 'localized-strings'

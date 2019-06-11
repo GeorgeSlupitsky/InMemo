@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import '../../app/App.css'
-import AppNavbar from '../../common/AppNavbar'
+import AppNavbar from '../common/AppNavbar'
 import { Link } from 'react-router-dom'
 import { Button, Container } from 'reactstrap'
 import { FormattedMessage } from 'react-intl'
 
 class Home extends Component {
+
   render() {
     return (
       <div>
@@ -13,37 +13,37 @@ class Home extends Component {
         <Container fluid>
           <Button color="link">
             <Link to="/cds">
-              <FormattedMessage 
+              <FormattedMessage
                 id="Home.manageCDs"
-                defaultMessage="Manage CDs"/>
+                defaultMessage="Manage CDs" />
             </Link>
           </Button>
         </Container>
         <Container fluid>
           <Button color="link">
             <Link to="/cdsForeign">
-            <FormattedMessage 
+              <FormattedMessage
                 id="Home.manageForeignCDs"
-                defaultMessage="Manage Foreign CDs"/>
-          </Link>
+                defaultMessage="Manage Foreign CDs" />
+            </Link>
           </Button>
         </Container>
         <Container fluid>
           <Button color="link">
             <Link to="/cdsDomestic">
-            <FormattedMessage 
+              <FormattedMessage
                 id="Home.manageDomesticCDs"
-                defaultMessage="Manage Domestic CDs"/> 
-          </Link>
+                defaultMessage="Manage Domestic CDs" />
+            </Link>
           </Button>
         </Container>
         <Container fluid>
           <Button color="link">
             <Link to="/drumsticks">
-            <FormattedMessage 
+              <FormattedMessage
                 id="Home.manageDrumsticks"
-                defaultMessage="Manage Drumsticks CDs"/> 
-              </Link>
+                defaultMessage="Manage Drumsticks CDs" />
+            </Link>
           </Button>
         </Container>
       </div>
