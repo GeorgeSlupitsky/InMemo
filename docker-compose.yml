@@ -1,0 +1,31 @@
+version: "3.3"
+services:
+  db:
+    image: mongo:latest
+    container_name: "mongodb"
+    ports:
+      - 27017:27017
+    command: --smallfiles
+    networks:
+      - in_memo_app
+  api:
+    build: ./in-memo-spring/
+    container_name: "in-memo-api"
+    ports:
+      - 8085:8085
+    networks:
+      - in_memo_app
+    depends_on:
+      - db
+  frontend:
+    build: ./in-memo-react/
+    container_name: "in-memo-frontend"
+    ports:
+      - 3000:3000
+    networks:
+      - in_memo_app
+    depends_on:
+      - api
+networks:
+  in_memo_app:
+    driver: overlay

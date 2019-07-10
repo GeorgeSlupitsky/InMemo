@@ -214,7 +214,7 @@ public class PdfView extends AbstractPdfView {
         float[] columnWidths = new float[]{15f, 15f, 15f, 15f, 15f, 15f};
         table.setWidths(columnWidths);
 
-        int remainder = NUM_COLUMNS_DRUM_STICKS_LABELS - drumSticks.size() % NUM_COLUMNS_DRUM_STICKS_LABELS;
+        int remainder = NUM_COLUMNS_DRUM_STICKS_LABELS - idsToPrint.size() % NUM_COLUMNS_DRUM_STICKS_LABELS;
 
         for (DrumStick drumStick: drumSticks){
             for (Integer id: idsToPrint) {

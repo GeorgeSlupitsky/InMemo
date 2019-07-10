@@ -15,7 +15,7 @@
 	<description>inMemo - control your collections</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>12</java.version>
 	</properties>
 
 	<dependencies>
@@ -129,6 +129,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>InMemo</finalName>
 	</build>
 
 </project>
