@@ -23,7 +23,7 @@ function DrumStickItem(props) {
                     <Button size="sm" color="primary" tag={Link} to={"/drumsticks/" + drumstick.id}>
                         <FormattedMessage id="Item.edit" defaultMessage="Edit" />
                     </Button>
-                    <Button size="sm" color="danger" onClick={() => props.removeItem(drumstick.id)}>
+                    <Button size="sm" color="danger" onClick={() => props.removeItem(props.service, props.deleteURL, drumstick.id)}>
                         <FormattedMessage id="Item.delete" defaultMessage="Delete" />
                     </Button>
                 </ButtonGroup>

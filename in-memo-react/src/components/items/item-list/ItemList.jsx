@@ -64,9 +64,9 @@ export default class ItemList extends Component {
                     number={number++}
                     drumstick={item}
                     removeItem={removeItem}
-                    addCheckedItemToArray={addItemToArray}
                     deleteURL={deleteURL}
-                    service={service} />
+                    service={service}
+                    addCheckedItemToArray={addItemToArray} />
             }
         })
 
