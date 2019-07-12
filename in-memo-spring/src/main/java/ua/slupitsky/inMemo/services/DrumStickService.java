@@ -9,9 +9,9 @@ import java.util.ResourceBundle;
 
 public interface DrumStickService {
 
-    List<DrumStickForm> findAllDrumSticksWithBundle(ResourceBundle resourceBundle);
-
     List<DrumStick> findAllDrumSticks();
+
+    List<DrumStickForm> findAllDrumSticksWithResourceBundle(ResourceBundle resourceBundle);
 
     Optional <DrumStick> findDrumStickById(int id);
 

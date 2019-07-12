@@ -51,7 +51,7 @@ public class DrumStickController {
     @GetMapping(value = "/drumsticks")
     public Iterable<DrumStickForm> getDrumStickList(Locale locale){
         ResourceBundle resourceBundle = ResourceBundle.getBundle("InMemo", Utils.getCorrectLocale(locale));
-        return drumStickService.findAllDrumSticksWithBundle(resourceBundle);
+        return drumStickService.findAllDrumSticksWithResourceBundle(resourceBundle);
     }
 
     @ApiOperation(value = "Search Drum Stick with an ID", response = DrumStick.class)
@@ -73,7 +73,7 @@ public class DrumStickController {
 
     @ApiOperation(value = "Update Drum Stick")
     @PutMapping(value = "/drumstick")
-    public ResponseEntity<String> updateCD(@Valid @RequestBody DrumStick drumStick){
+    public ResponseEntity<String> updateDrumStick(@Valid @RequestBody DrumStick drumStick){
         drumStickService.updateDrumStick(drumStick.getId(), drumStick);
         log.info("DrumStick with id: " + drumStick.getId() + " : " + drumStick.getBand() + " - " + drumStick.getDrummerName() + " updated");
         return new ResponseEntity<>("Drum Stick updated successfully", HttpStatus.OK);

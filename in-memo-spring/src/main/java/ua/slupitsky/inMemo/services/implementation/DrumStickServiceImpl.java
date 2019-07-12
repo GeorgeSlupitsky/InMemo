@@ -6,12 +6,14 @@ import ua.slupitsky.inMemo.models.dto.DrumStickForm;
 import ua.slupitsky.inMemo.models.mongo.DrumStick;
 import ua.slupitsky.inMemo.repositories.DrumStickRepository;
 import ua.slupitsky.inMemo.services.DrumStickService;
+import ua.slupitsky.inMemo.sorting.DrumStickComparator;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @Service
 public class DrumStickServiceImpl implements DrumStickService {
@@ -24,26 +26,15 @@ public class DrumStickServiceImpl implements DrumStickService {
     }
 
     @Override
-    public List<DrumStickForm> findAllDrumSticksWithBundle(ResourceBundle resourceBundle) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        List<DrumStick> drumSticksFromDB = drumStickRepository.findAll();
-        List<DrumStickForm> drumSticks = new ArrayList<>();
-        for (DrumStick drumStick: drumSticksFromDB){
-            DrumStickForm drumStickForm = new DrumStickForm();
-            drumStickForm.setId(drumStick.getId());
-            drumStickForm.setBand(drumStick.getBand());
-            drumStickForm.setDrummerName(drumStick.getDrummerName());
-            drumStickForm.setDate(formatter.format(drumStick.getDate()));
-            drumStickForm.setCity(resourceBundle.getString(drumStick.getCity().getName()));
-            drumStickForm.setDescription(resourceBundle.getString(drumStick.getDescription().getName()));
-            drumSticks.add(drumStickForm);
-        }
-        return drumSticks;
+    public List<DrumStick> findAllDrumSticks() {
+        return drumStickRepository.findAll().stream().sorted(new DrumStickComparator()).collect(Collectors.toList());
     }
 
     @Override
-    public List<DrumStick> findAllDrumSticks() {
-        return drumStickRepository.findAll();
+    public List<DrumStickForm> findAllDrumSticksWithResourceBundle(ResourceBundle resourceBundle) {
+        List<DrumStick> drumSticksFromDB = drumStickRepository.findAll();
+        drumSticksFromDB.sort(new DrumStickComparator());
+        return getDrumStickFormFromEntity(drumSticksFromDB, resourceBundle);
     }
 
     @Override
@@ -81,5 +72,21 @@ public class DrumStickServiceImpl implements DrumStickService {
     @Override
     public void addCollectionDrumSticks(List<DrumStick> drumSticks) {
         drumStickRepository.saveAll(drumSticks);
+    }
+
+    private List<DrumStickForm> getDrumStickFormFromEntity(List<DrumStick> drumSticksFromDB, ResourceBundle resourceBundle){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        List<DrumStickForm> drumSticks = new ArrayList<>();
+        for (DrumStick drumStick: drumSticksFromDB){
+            DrumStickForm drumStickForm = new DrumStickForm();
+            drumStickForm.setId(drumStick.getId());
+            drumStickForm.setBand(drumStick.getBand());
+            drumStickForm.setDrummerName(drumStick.getDrummerName());
+            drumStickForm.setDate(formatter.format(drumStick.getDate()));
+            drumStickForm.setCity(resourceBundle.getString(drumStick.getCity().getName()));
+            drumStickForm.setDescription(resourceBundle.getString(drumStick.getDescription().getName()));
+            drumSticks.add(drumStickForm);
+        }
+        return drumSticks;
     }
 }
