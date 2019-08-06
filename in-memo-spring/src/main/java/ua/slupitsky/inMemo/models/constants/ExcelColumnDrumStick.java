@@ -7,4 +7,5 @@ public interface ExcelColumnDrumStick {
     int DATE = 3;
     int CITY = 4;
     int NOTE = 5;
+    int LINK_TO_PHOTO = 6;
 }

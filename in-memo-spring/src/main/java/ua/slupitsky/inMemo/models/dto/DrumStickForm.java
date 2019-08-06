@@ -3,6 +3,7 @@ package ua.slupitsky.inMemo.models.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -15,5 +16,6 @@ public class DrumStickForm {
     private String date;
     private String city;
     private String description;
+    private String linkToPhoto;
 
 }

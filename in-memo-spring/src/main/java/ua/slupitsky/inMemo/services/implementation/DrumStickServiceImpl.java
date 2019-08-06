@@ -1,24 +1,28 @@
 package ua.slupitsky.inMemo.services.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ua.slupitsky.inMemo.models.dto.DrumStickForm;
 import ua.slupitsky.inMemo.models.mongo.DrumStick;
 import ua.slupitsky.inMemo.repositories.DrumStickRepository;
 import ua.slupitsky.inMemo.services.DrumStickService;
 import ua.slupitsky.inMemo.sorting.DrumStickComparator;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 @Service
 public class DrumStickServiceImpl implements DrumStickService {
 
     private final DrumStickRepository drumStickRepository;
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @Autowired
     public DrumStickServiceImpl(DrumStickRepository drumStickRepository) {
@@ -74,17 +78,36 @@ public class DrumStickServiceImpl implements DrumStickService {
         drumStickRepository.saveAll(drumSticks);
     }
 
+    @Override
+    public void uploadPhoto(MultipartFile photo, int drumstickId) throws IOException {
+        DrumStick drumStick = drumStickRepository.findById(drumstickId).get();
+        if (photo != null){
+            int index = Objects.requireNonNull(photo.getOriginalFilename()).lastIndexOf(".");
+            String extension = photo.getOriginalFilename().substring(index);
+            String path = System.getProperty("catalina.home") + "/images/drumsticks/" + drumStick.getBand() + "/";
+            File file = new File(path);
+            if(!file.exists()) {
+                file.mkdirs();
+            }
+            String date = dateTimeFormatter.format(drumStick.getDate());
+            file = new File(file, drumStick.getDrummerName() + "_" + date + extension);
+            photo.transferTo(file);
+            drumStick.setLinkToPhoto("/images/drumsticks/" + drumStick.getBand() + "/" + drumStick.getDrummerName() + "_" + date + extension);
+            drumStickRepository.save(drumStick);
+        }
+    }
+
     private List<DrumStickForm> getDrumStickFormFromEntity(List<DrumStick> drumSticksFromDB, ResourceBundle resourceBundle){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         List<DrumStickForm> drumSticks = new ArrayList<>();
         for (DrumStick drumStick: drumSticksFromDB){
             DrumStickForm drumStickForm = new DrumStickForm();
             drumStickForm.setId(drumStick.getId());
             drumStickForm.setBand(drumStick.getBand());
             drumStickForm.setDrummerName(drumStick.getDrummerName());
-            drumStickForm.setDate(formatter.format(drumStick.getDate()));
+            drumStickForm.setDate(dateTimeFormatter.format(drumStick.getDate()));
             drumStickForm.setCity(resourceBundle.getString(drumStick.getCity().getName()));
             drumStickForm.setDescription(resourceBundle.getString(drumStick.getDescription().getName()));
+            drumStickForm.setLinkToPhoto(drumStick.getLinkToPhoto());
             drumSticks.add(drumStickForm);
         }
         return drumSticks;

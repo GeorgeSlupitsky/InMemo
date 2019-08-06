@@ -18,6 +18,7 @@ function DrumStickItem(props) {
             <td>{drumstick.date}</td>
             <td>{drumstick.city}</td>
             <td>{drumstick.description}</td>
+            <td>{drumstick.linkToPhoto !== null ? "+" : "-"}</td>
             <td>
                 <ButtonGroup>
                     <Button size="sm" color="primary" tag={Link} to={"/drumsticks/" + drumstick.id}>

@@ -9,5 +9,7 @@ public interface ExcelColumnCD {
     int BOOKLET = 5;
     int COUNTRY = 6;
     int NOTE = 7;
-    int MEMBERS = 8;
+    int AUTOGRAPH = 8;
+    int MEMBERS = 9;
+    int DISCOGS_LINK = 10;
 }

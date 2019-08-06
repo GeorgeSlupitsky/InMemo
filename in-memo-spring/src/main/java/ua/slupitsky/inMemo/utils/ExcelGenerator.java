@@ -74,6 +74,8 @@ public class ExcelGenerator {
         sheet.setColumnWidth(ExcelColumnCD.YEAR, 3000);
         sheet.setColumnWidth(ExcelColumnCD.NOTE, 5500);
         sheet.setColumnWidth(ExcelColumnCD.MEMBERS, 15000);
+        sheet.setColumnWidth(ExcelColumnCD.DISCOGS_LINK, 15000);
+        sheet.setColumnWidth(ExcelColumnCD.AUTOGRAPH, 1200);
 
         Row header = sheet.createRow(0);
         header.createCell(ExcelColumnCD.NUMBER).setCellValue("№");
@@ -94,6 +96,11 @@ public class ExcelGenerator {
         header.getCell(ExcelColumnCD.NOTE).setCellStyle(style);
         header.createCell(ExcelColumnCD.MEMBERS).setCellValue(resourceBundle.getString("cd.members"));
         header.getCell(ExcelColumnCD.MEMBERS).setCellStyle(style);
+        header.createCell(ExcelColumnCD.DISCOGS_LINK).setCellValue(resourceBundle.getString("cd.discogsLink"));
+        header.getCell(ExcelColumnCD.DISCOGS_LINK).setCellStyle(style);
+        header.createCell(ExcelColumnCD.AUTOGRAPH).setCellValue("@");
+        header.getCell(ExcelColumnCD.AUTOGRAPH).setCellStyle(style);
+
 
         int rowCount = 1;
 
@@ -117,6 +124,12 @@ public class ExcelGenerator {
             cdRow.createCell(ExcelColumnCD.COUNTRY).setCellValue(resourceBundle.getString(cd.getCountryEdition().getName()));
             cdRow.createCell(ExcelColumnCD.NOTE).setCellValue(resourceBundle.getString(cd.getCdType().getName()));
 
+            if (cd.getAutograph() != null && cd.getAutograph()){
+                cdRow.createCell(ExcelColumnCD.AUTOGRAPH).setCellValue("+");
+            } else {
+                cdRow.createCell(ExcelColumnCD.AUTOGRAPH).setCellValue("-");
+            }
+
             List<CDBandMainMember> bandMainMembers = cd.getBand().getBandMembers();
             if (bandMainMembers == null){
                 cdRow.createCell(ExcelColumnCD.MEMBERS).setCellValue("-");
@@ -124,6 +137,13 @@ public class ExcelGenerator {
                 StringBuilder members = Utils.iterateCDBandMembers(bandMainMembers);
                 cdRow.createCell(ExcelColumnCD.MEMBERS).setCellValue(members.toString());
             }
+
+            if (cd.getDiscogsLink() == null){
+                cdRow.createCell(ExcelColumnCD.DISCOGS_LINK).setCellValue("-");
+            } else {
+                cdRow.createCell(ExcelColumnCD.DISCOGS_LINK).setCellValue(cd.getDiscogsLink());
+            }
+
         }
     }
 
@@ -149,21 +169,28 @@ public class ExcelGenerator {
         header.getCell(ExcelColumnDrumStick.CITY).setCellStyle(style);
         header.createCell(ExcelColumnDrumStick.NOTE).setCellValue(resourceBundle.getString("drumstick.description"));
         header.getCell(ExcelColumnDrumStick.NOTE).setCellStyle(style);
+        header.createCell(ExcelColumnDrumStick.LINK_TO_PHOTO).setCellValue(resourceBundle.getString("drumstick.linkToPhoto"));
+        header.getCell(ExcelColumnDrumStick.LINK_TO_PHOTO).setCellStyle(style);
 
         int rowCount = 1;
 
         for(DrumStick drumStick : drumSticks){
             Row drumStickRow =  sheet.createRow(rowCount++);
-            drumStickRow.createCell(0).setCellValue(rowCount - 1);
-            drumStickRow.createCell(1).setCellValue(drumStick.getBand());
-            drumStickRow.createCell(2).setCellValue(drumStick.getDrummerName());
+            drumStickRow.createCell(ExcelColumnDrumStick.NUMBER).setCellValue(rowCount - 1);
+            drumStickRow.createCell(ExcelColumnDrumStick.BAND).setCellValue(drumStick.getBand());
+            drumStickRow.createCell(ExcelColumnDrumStick.DRUMMER_NAME).setCellValue(drumStick.getDrummerName());
             if (drumStick.getDate() != null){
-                drumStickRow.createCell(3).setCellValue(formatter.format(drumStick.getDate()));
+                drumStickRow.createCell(ExcelColumnDrumStick.DATE).setCellValue(formatter.format(drumStick.getDate()));
             } else {
-                drumStickRow.createCell(3).setCellValue("");
+                drumStickRow.createCell(ExcelColumnDrumStick.DATE).setCellValue("");
             }
-            drumStickRow.createCell(4).setCellValue(resourceBundle.getString(drumStick.getCity().getName()));
-            drumStickRow.createCell(5).setCellValue(resourceBundle.getString(drumStick.getDescription().getName()));
+            drumStickRow.createCell(ExcelColumnDrumStick.CITY).setCellValue(resourceBundle.getString(drumStick.getCity().getName()));
+            drumStickRow.createCell(ExcelColumnDrumStick.NOTE).setCellValue(resourceBundle.getString(drumStick.getDescription().getName()));
+            if (drumStick.getLinkToPhoto() != null){
+                drumStickRow.createCell(ExcelColumnDrumStick.LINK_TO_PHOTO).setCellValue(drumStick.getLinkToPhoto());
+            } else {
+                drumStickRow.createCell(ExcelColumnDrumStick.LINK_TO_PHOTO).setCellValue("-");
+            }
         }
     }
 

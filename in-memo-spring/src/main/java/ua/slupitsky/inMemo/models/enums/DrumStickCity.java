@@ -12,7 +12,8 @@ public enum DrumStickCity {
     KAMIANETS_PODILSKYI("drumstick.city.kamianetsPodilskyi"),
     KAMIANETS_PODILSKYI_FORPOST("drumstick.city.kamianetsPodilskyi.forpost"),
     KAMIANETS_PODILSKYI_RESPUBLICA("drumstick.city.kamianetsPodilskyi.respublica"),
-    KAMIANETS_PODILSKYI_RESPUBLICA_FAMILY("drumstick.city.kamianetsPodilskyi.respublicaFamily");
+    KAMIANETS_PODILSKYI_RESPUBLICA_FAMILY("drumstick.city.kamianetsPodilskyi.respublicaFamily"),
+    KRASYLIV("drumstick.city.krasyliv");
 
     private String name;
 

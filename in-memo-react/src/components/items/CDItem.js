@@ -14,6 +14,13 @@ function CDItem(props) {
         })
     }
 
+    let autograph = ''
+    if (cd.autograph) {
+        autograph = '+'
+    } else {
+        autograph = '-'
+    }
+
     return (
         <tr key={cd.id}>
             <td>{number}</td>
@@ -24,6 +31,8 @@ function CDItem(props) {
             <td>{cd.countryEdition}</td>
             <td>{cd.cdType}</td>
             <td>{bandMembers}</td>
+            <td>{autograph}</td>
+            <td>{cd.discogsLink}</td>
             <td>
                 <ButtonGroup>
                     <Button size="sm" color="primary" tag={Link} to={props.editLink + cd.id}>

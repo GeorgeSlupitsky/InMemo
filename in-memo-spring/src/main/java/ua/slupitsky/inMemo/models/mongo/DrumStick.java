@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.web.multipart.MultipartFile;
 import ua.slupitsky.inMemo.models.enums.DrumStickCity;
 import ua.slupitsky.inMemo.models.enums.DrumStickType;
 import ua.slupitsky.inMemo.utils.LocalDateDeserializer;
@@ -41,5 +42,8 @@ public class DrumStick {
 
     @ApiModelProperty(notes = "Description of Drum Stick")
     private DrumStickType description;
+
+    @ApiModelProperty(notes = "Link to drummer's photo")
+    private String linkToPhoto;
 
 }

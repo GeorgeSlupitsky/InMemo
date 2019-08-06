@@ -71,6 +71,8 @@ public class CDServiceImpl implements CDService {
         storedCD.setYear(cd.getYear());
         storedCD.setCdGroup(cd.getCdGroup());
         storedCD.setCdType(cd.getCdType());
+        storedCD.setAutograph(cd.getAutograph());
+        storedCD.setDiscogsLink(cd.getDiscogsLink());
         cdRepository.save(storedCD);
     }
 
@@ -99,6 +101,8 @@ public class CDServiceImpl implements CDService {
             }
             cdForm.setCountryEdition(resourceBundle.getString(cd.getCountryEdition().getName()));
             cdForm.setCdType(resourceBundle.getString(cd.getCdType().getName()));
+            cdForm.setAutograph(cd.getAutograph());
+            cdForm.setDiscogsLink(cd.getDiscogsLink());
             cds.add(cdForm);
         }
         return cds;

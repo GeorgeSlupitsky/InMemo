@@ -24,6 +24,7 @@ export const itemListReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: true,
+                checkedIds: [],
                 data: []
             }
         case REMOVE_ITEM:

@@ -23,6 +23,7 @@
         "CDEdit.album.error": "Please enter album",
         "CDEdit.year": "Year",
         "CDEdit.bandMembers": "Band Members",
+        "CDEdit.discogsLink": "Link to Discogs",
         "CDEdit.save": "Save",
         "CDEdit.cancel": "Cancel",
 
@@ -33,6 +34,8 @@
         "DrumStickEdit.drummerName": "Drummer Name",
         "DrumStickEdit.drummerName.error": "Please enter drummer name",
         "DrumStickEdit.date": "Date",
+        "DrumStickEdit.addPhoto": "Add Photo:",
+        "DrumStickEdit.photo": "Photo:",
         "DrumStickEdit.save": "Save",
         "DrumStickEdit.cancel": "Cancel",
 
@@ -52,6 +55,8 @@
         "ItemList.date": "Date",
         "ItemList.city": "City",
         "ItemList.description": "Description",
+        "ItemList.discogsLink": "Link to Discogs",
+        "ItemList.photo": "Photo",
 
         "Item.edit": "Edit",
         "Item.delete": "Delete"
@@ -81,6 +86,7 @@
         "CDEdit.album.error": "Por favor ingrese el nombre del álbum",
         "CDEdit.year": "Año",
         "CDEdit.bandMembers": "Miembros de la banda",
+        "CDEdit.discogsLink": "Enlace a Discogs",
         "CDEdit.save": "Salvar",
         "CDEdit.cancel": "Cancelar",
 
@@ -91,6 +97,8 @@
         "DrumStickEdit.drummerName": "Nombre del baterista",
         "DrumStickEdit.drummerName.error": "Por favor ingrese el nombre del baterista",
         "DrumStickEdit.date": "Fecha",
+        "DrumStickEdit.addPhoto": "Añadir foto:",
+        "DrumStickEdit.photo": "Foto:",
         "DrumStickEdit.save": "Salvar",
         "DrumStickEdit.cancel": "Cancelar",
 
@@ -110,6 +118,8 @@
         "ItemList.date": "Fecha",
         "ItemList.city": "Ciudad",
         "ItemList.description": "Descripción",
+        "ItemList.discogsLink": "Enlace a Discogs",
+        "ItemList.photo": "Foto",
 
         "Item.edit": "Editar",
         "Item.delete": "Borrar"
@@ -139,6 +149,7 @@
         "CDEdit.album.error": "Пожалуйста, введите название альбома",
         "CDEdit.year": "Год",
         "CDEdit.bandMembers": "Учасники группы",
+        "CDEdit.discogsLink": "Ссылка на Discogs",
         "CDEdit.save": "Сохранить",
         "CDEdit.cancel": "Отменить",
 
@@ -149,6 +160,8 @@
         "DrumStickEdit.drummerName": "Имя барабанщика",
         "DrumStickEdit.drummerName.error": "Пожалуйста, введите имя барабанщика",
         "DrumStickEdit.date": "Дата",
+        "DrumStickEdit.addPhoto": "Добавить фото:",
+        "DrumStickEdit.photo": "Фото:",
         "DrumStickEdit.save": "Сохранить",
         "DrumStickEdit.cancel": "Отменить",
 
@@ -168,6 +181,8 @@
         "ItemList.date": "Дата",
         "ItemList.city": "Город",
         "ItemList.description": "Описание",
+        "ItemList.discogsLink": "Ссылка на Discogs",
+        "ItemList.photo": "Фото",
 
         "Item.edit": "Редактировать",
         "Item.delete": "Удалить"
@@ -197,6 +212,7 @@
         "CDEdit.album.error": "Будь ласка, введіть назву альбому",
         "CDEdit.year": "Рік",
         "CDEdit.bandMembers": "Учасники гурта",
+        "CDEdit.discogsLink": "Посилання на Discogs",
         "CDEdit.save": "Зберегти",
         "CDEdit.cancel": "Відмінити",
 
@@ -207,6 +223,8 @@
         "DrumStickEdit.drummerName": "Ім'я барабанщика",
         "DrumStickEdit.drummerName.error": "Будь ласка, введіть ім'я барабанщика",
         "DrumStickEdit.date": "Дата",
+        "DrumStickEdit.addPhoto": "Додати фото:",
+        "DrumStickEdit.photo": "Фото:",
         "DrumStickEdit.save": "Зберегти",
         "DrumStickEdit.cancel": "Відмінити",
 
@@ -226,6 +244,8 @@
         "ItemList.date": "Дата",
         "ItemList.city": "Місто",
         "ItemList.description": "Опис",
+        "ItemList.discogsLink": "Посилання на Discogs",
+        "ItemList.photo": "Фото",
 
         "Item.edit": "Редагувати",
         "Item.delete": "Видалити"
@@ -255,6 +275,7 @@
         "CDEdit.album.error": "アルバムを入力してください",
         "CDEdit.year": "年",
         "CDEdit.bandMembers": "バンドのメンバー",
+        "CDEdit.discogsLink": "Discogsへのリンク",
         "CDEdit.save": "保存する",
         "CDEdit.cancel": "キャンセル",
 
@@ -265,6 +286,8 @@
         "DrumStickEdit.drummerName": "ドラマー名",
         "DrumStickEdit.drummerName.error": "ドラマー名を入力してください",
         "DrumStickEdit.date": "日付",
+        "DrumStickEdit.addPhoto": "写真を追加する:",
+        "DrumStickEdit.photo": "写真:",
         "DrumStickEdit.save": "保存する",
         "DrumStickEdit.cancel": "キャンセル",
 
@@ -284,6 +307,8 @@
         "ItemList.date": "日付",
         "ItemList.city": "市",
         "ItemList.description": "説明",
+        "ItemList.discogsLink": "Discogsへのリンク",
+        "ItemList.photo": "写真",
 
         "Item.edit": "編集する",
         "Item.delete": "削除する"

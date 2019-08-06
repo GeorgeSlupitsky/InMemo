@@ -139,4 +139,19 @@ public class DrumStickController {
 
         return new ResponseEntity<>("Done", HttpStatus.OK);
     }
+
+    @PostMapping("drumstick/uploadPhoto")
+    public ResponseEntity<String> uploadPhoto(
+            @ApiParam(name = "photo", value = "Select the photo to Upload", required = true)
+            @RequestPart("photo") MultipartFile photo,
+            @ApiParam(name = "drumstickId", value = "Id of Drumstick", required = true)
+            @RequestParam String drumstickId){
+            try {
+                drumStickService.uploadPhoto(photo, Integer.parseInt(drumstickId));
+            } catch (IllegalStateException | IOException e) {
+                log.log(Level.SEVERE, "IOException: ", e);
+                return new ResponseEntity<>("Failed.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        return new ResponseEntity<>("Done", HttpStatus.OK);
+    }
 }

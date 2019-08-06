@@ -42,4 +42,10 @@ public class CD {
     @ApiModelProperty(notes = "Index for comparing")
     private Integer indexWeight;
 
+    @ApiModelProperty(notes = "Autograph availability")
+    private Boolean autograph;
+
+    @ApiModelProperty(notes = "Link to Discogs")
+    private String discogsLink;
+
 }

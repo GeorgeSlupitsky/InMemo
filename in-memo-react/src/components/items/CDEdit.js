@@ -3,8 +3,9 @@ import { Link, withRouter } from 'react-router-dom'
 import { Button, Container, FormGroup, Input, Label } from 'reactstrap'
 import AppNavbar from '../common/AppNavbar'
 import { FormattedMessage } from 'react-intl'
-import { AvForm, AvGroup, AvInput, AvFeedback, AvField } from 'availity-reactstrap-validation'
+import { AvForm, AvGroup, AvInput, AvFeedback, AvField, AvCheckbox, AvCheckboxGroup } from 'availity-reactstrap-validation'
 import LocalizedStrings from 'localized-strings'
+
 
 class CDEdit extends Component {
 
@@ -19,7 +20,9 @@ class CDEdit extends Component {
     booklet: '',
     countryEdition: '',
     cdType: '',
-    cdGroup: ''
+    cdGroup: '',
+    autograph: false,
+    discogsLink: ''
   }
 
   constructor(props) {
@@ -34,6 +37,7 @@ class CDEdit extends Component {
       bandOrders: [],
       messages: {}
     }
+    this.handleCheckbox = this.handleCheckbox.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleChangeForBand = this.handleChangeForBand.bind(this)
     this.handleChangeForBandMember = this.handleChangeForBandMember.bind(this)
@@ -57,7 +61,8 @@ class CDEdit extends Component {
         selectLabelCountry: 'Country',
         selectLabelType: 'Type',
         selectLabelGroup: 'Group',
-        selectLabelOrder: 'Order'
+        selectLabelOrder: 'Order',
+        checkboxLabelAutograph: 'Autograph'
       },
       es: {
         errorMessageYearRequired: 'Por favor ingrese un año o "-"',
@@ -71,7 +76,8 @@ class CDEdit extends Component {
         selectLabelCountry: 'Pais',
         selectLabelType: 'Tipo',
         selectLabelGroup: 'Grupo',
-        selectLabelOrder: 'Orden'
+        selectLabelOrder: 'Orden',
+        checkboxLabelAutograph: 'Autógrafo'
       },
       ru: {
         errorMessageYearRequired: 'Пожалуйста, укажите год или "-"',
@@ -85,7 +91,8 @@ class CDEdit extends Component {
         selectLabelCountry: 'Страна',
         selectLabelType: 'Тип',
         selectLabelGroup: 'Класс',
-        selectLabelOrder: 'Порядок'
+        selectLabelOrder: 'Порядок',
+        checkboxLabelAutograph: 'Автограф'
       },
       uk: {
         errorMessageYearRequired: 'Будь ласка, вкажіть рік або "-"',
@@ -99,7 +106,8 @@ class CDEdit extends Component {
         selectLabelCountry: 'Країна',
         selectLabelType: 'Тип',
         selectLabelGroup: 'Клас',
-        selectLabelOrder: 'Порядок'
+        selectLabelOrder: 'Порядок',
+        checkboxLabelAutograph: 'Автограф'
       },
       ja: {
         errorMessageYearRequired: '年または「 - 」を入力してください',
@@ -113,7 +121,8 @@ class CDEdit extends Component {
         selectLabelCountry: '国',
         selectLabelType: 'タイプ',
         selectLabelGroup: 'グループ',
-        selectLabelOrder: '注文'
+        selectLabelOrder: '注文',
+        checkboxLabelAutograph: 'サイン'
       }
     })
 
@@ -136,6 +145,12 @@ class CDEdit extends Component {
       bandOrders: bandOrders
     })
 
+  }
+
+  handleCheckbox(event){
+    let item = { ...this.state.item }
+    item.autograph = !item.autograph
+    this.setState({ item })
   }
 
   handleChange(event) {
@@ -235,6 +250,13 @@ class CDEdit extends Component {
       </p>
     })
 
+    let checkboxAutograph
+    if (item.autograph){
+      checkboxAutograph = <AvCheckbox label={messages.checkboxLabelAutograph} onChange={this.handleCheckbox} checked/>
+    } else {
+      checkboxAutograph = <AvCheckbox label={messages.checkboxLabelAutograph} onChange={this.handleCheckbox}/>
+    }
+
     return <div>
       <AppNavbar />
       <Container>
@@ -279,6 +301,13 @@ class CDEdit extends Component {
               onChange={this.handleChangeForBandMember} onKeyPress={this.onEnterBandMember} />
           </FormGroup>
           {bandMembers}
+          <AvGroup>
+            <Label for="discogsLink">
+              <FormattedMessage id="CDEdit.discogsLink" defaultMessage="Link to Discogs" />
+            </Label>
+            <AvField type="text" name="discogsLink" id="discogsLink" value={item.discogsLink || ''}
+              onChange={this.handleChange}/>
+          </AvGroup>
           <div className="row">
             <AvGroup className="col-md-2 mb-3">
               <AvField type="select" name="booklet" id="booklet" value={item.booklet || ''}
@@ -331,6 +360,9 @@ class CDEdit extends Component {
               </AvField>
             </AvGroup>
           </div>
+          <AvCheckboxGroup name="autograph">
+              {checkboxAutograph}
+          </AvCheckboxGroup>
           <FormGroup>
             <Button color="primary">
               <FormattedMessage id="CDEdit.save" defaultMessage="Save" />

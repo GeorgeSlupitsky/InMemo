@@ -213,6 +213,19 @@ public class ExcelParser {
                                 }
                                 cd.setBand(cdBand);
                                 break;
+                            case ExcelColumnCD.DISCOGS_LINK:
+                                if (cell.getStringCellValue().equals("-")){
+                                    cd.setDiscogsLink(null);
+                                } else {
+                                    cd.setDiscogsLink(cell.getStringCellValue());
+                                }
+                                break;
+                            case ExcelColumnCD.AUTOGRAPH:
+                                if (cell.getStringCellValue().equals("+")){
+                                    cd.setAutograph(true);
+                                } else {
+                                    cd.setAutograph(false);
+                                }
                         }
                     }
                 }
@@ -258,6 +271,13 @@ public class ExcelParser {
                                 break;
                             case ExcelColumnDrumStick.NOTE:
                                 setDrumStickType(drumStick, getResourceBundleKey(cell.getStringCellValue(), resourceBundle));
+                                break;
+                            case ExcelColumnDrumStick.LINK_TO_PHOTO:
+                                if (cell.getStringCellValue().equals("-")){
+                                    drumStick.setLinkToPhoto(null);
+                                } else {
+                                    drumStick.setLinkToPhoto(cell.getStringCellValue());
+                                }
                                 break;
                         }
                     }

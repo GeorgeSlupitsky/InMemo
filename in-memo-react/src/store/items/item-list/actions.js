@@ -22,7 +22,6 @@ const clearData = () => {
 }
 
 const removeItem = (service, deleteURL, id) => {
-    console.log(service)
     return dispatch => {
         service.deleteItem(deleteURL, id)
             .then(() => {

@@ -18,5 +18,7 @@ public class CDForm {
     private String countryEdition;
     private String cdType;
     private String cdGroup;
+    private Boolean autograph;
+    private String discogsLink;
 
 }

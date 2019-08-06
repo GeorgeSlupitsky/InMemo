@@ -26,8 +26,8 @@ import java.util.ResourceBundle;
 public class PdfView extends AbstractPdfView {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    private static final int NUM_COLUMNS_CD = 8;
-    private static final int NUM_COLUMNS_DRUM_STICKS = 6;
+    private static final int NUM_COLUMNS_CD = 9;
+    private static final int NUM_COLUMNS_DRUM_STICKS = 7;
     private static final int NUM_COLUMNS_DRUM_STICKS_LABELS = 6;
 
     private Font fontHeaderBold;
@@ -83,7 +83,7 @@ public class PdfView extends AbstractPdfView {
         initParagraph(document, tableName, isDomestic);
 
         PdfPTable table = new PdfPTable(NUM_COLUMNS_CD);
-        float[] columnWidths = new float[]{5f, 40f, 40f, 10f, 10f, 15f, 15f, 40f};
+        float[] columnWidths = new float[]{5f, 40f, 40f, 10f, 10f, 15f, 15f, 35f, 5f};
         table.setWidths(columnWidths);
 
         cellCenterAlign.setPhrase(new Phrase("№"));
@@ -108,6 +108,9 @@ public class PdfView extends AbstractPdfView {
         table.addCell(cellCenterAlign);
 
         cellCenterAlign.setPhrase(new Phrase(resourceBundle.getString("cd.members"), fontBold));
+        table.addCell(cellCenterAlign);
+
+        cellCenterAlign.setPhrase(new Phrase("@", fontBold));
         table.addCell(cellCenterAlign);
 
         int rowCount = 1;
@@ -143,6 +146,14 @@ public class PdfView extends AbstractPdfView {
                 table.addCell(cell);
             }
 
+            if (cd.getAutograph() != null && cd.getAutograph()){
+                cellCenterAlign.setPhrase(new Phrase(("+"), fontNormal));
+                table.addCell(cellCenterAlign);
+            } else {
+                cellCenterAlign.setPhrase(new Phrase(("-"), fontNormal));
+                table.addCell(cellCenterAlign);
+            }
+
             rowCount++;
         }
 
@@ -157,7 +168,7 @@ public class PdfView extends AbstractPdfView {
         initParagraph(document, resourceBundle.getString("drumstick.sheetName"), false);
 
         PdfPTable table = new PdfPTable(NUM_COLUMNS_DRUM_STICKS);
-        float[] columnWidths = new float[]{5f, 30f, 30f, 10f, 15f, 15f};
+        float[] columnWidths = new float[]{5f, 30f, 30f, 10f, 15f, 15f, 10f};
         table.setWidths(columnWidths);
 
         cellCenterAlign.setPhrase(new Phrase("№"));
@@ -178,6 +189,9 @@ public class PdfView extends AbstractPdfView {
         cellCenterAlign.setPhrase(new Phrase(resourceBundle.getString("drumstick.description"), fontBold));
         table.addCell(cellCenterAlign);
 
+        cellCenterAlign.setPhrase(new Phrase(resourceBundle.getString("drumstick.photo"), fontBold));
+        table.addCell(cellCenterAlign);
+
         int rowCount = 1;
 
         for(DrumStick drumStick : drumSticks){
@@ -193,7 +207,12 @@ public class PdfView extends AbstractPdfView {
             table.addCell(cellCenterAlign);
             cell.setPhrase(new Phrase(resourceBundle.getString(drumStick.getDescription().getName()), fontNormal));
             table.addCell(cell);
-
+            if (drumStick.getLinkToPhoto() != null){
+                cellCenterAlign.setPhrase(new Phrase("+", fontNormal));
+            } else {
+                cellCenterAlign.setPhrase(new Phrase("-", fontNormal));
+            }
+            table.addCell(cellCenterAlign);
             rowCount++;
         }
 

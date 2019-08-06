@@ -99,13 +99,15 @@ export default class ItemList extends Component {
                             {group === 'all' || group === 'foreign' || group === 'domestic' ? (
                                 <tr>
                                     <th width="2%">№</th>
-                                    <th width="15%"><FormattedMessage id="ItemList.band" defaultMessage="Band" /></th>
-                                    <th width="15%"><FormattedMessage id="ItemList.album" defaultMessage="Album" /></th>
+                                    <th width="12%"><FormattedMessage id="ItemList.band" defaultMessage="Band" /></th>
+                                    <th width="13%"><FormattedMessage id="ItemList.album" defaultMessage="Album" /></th>
                                     <th width="10%"><FormattedMessage id="ItemList.year" defaultMessage="Year" /></th>
                                     <th width="10%"><FormattedMessage id="ItemList.booklet" defaultMessage="Booklet" /></th>
                                     <th width="10%"><FormattedMessage id="ItemList.country" defaultMessage="Country" /></th>
                                     <th width="10%"><FormattedMessage id="ItemList.type" defaultMessage="Type" /></th>
-                                    <th width="20%"><FormattedMessage id="ItemList.members" defaultMessage="Members" /></th>
+                                    <th width="13%"><FormattedMessage id="ItemList.members" defaultMessage="Members" /></th>
+                                    <th width="2%">@</th>
+                                    <th width="13%"><FormattedMessage id="ItemList.discogsLink" defaultMessage="Link to Discogs" /></th>
                                     <th width="5%"><FormattedMessage id="ItemList.actions" defaultMessage="Actions" /></th>
                                 </tr>
                             ) : (
@@ -114,9 +116,10 @@ export default class ItemList extends Component {
                                         <th width="2%">№</th>
                                         <th width="20%"><FormattedMessage id="ItemList.band" defaultMessage="Band" /></th>
                                         <th width="26%"><FormattedMessage id="ItemList.drummerName" defaultMessage="Drummer Name" /></th>
-                                        <th width="15%"><FormattedMessage id="ItemList.date" defaultMessage="Date" /></th>
-                                        <th width="15%"><FormattedMessage id="ItemList.city" defaultMessage="City" /></th>
-                                        <th width="15%"><FormattedMessage id="ItemList.description" defaultMessage="Description" /></th>
+                                        <th width="13%"><FormattedMessage id="ItemList.date" defaultMessage="Date" /></th>
+                                        <th width="14%"><FormattedMessage id="ItemList.city" defaultMessage="City" /></th>
+                                        <th width="14%"><FormattedMessage id="ItemList.description" defaultMessage="Description" /></th>
+                                        <th width="5%"><FormattedMessage id="ItemList.photo" defaultMessage="Photo" /></th>
                                         <th width="5%"><FormattedMessage id="ItemList.actions" defaultMessage="Actions" /></th>
                                     </tr>
                                 )}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
-import { Button, Container, FormGroup, Label } from 'reactstrap'
+import { Button, Container, FormGroup, Label, Input, Card, CardImg } from 'reactstrap'
 import AppNavbar from '../common/AppNavbar'
 import { FormattedMessage } from 'react-intl'
 import { AvGroup, AvForm, AvField, AvInput, AvFeedback } from 'availity-reactstrap-validation'
@@ -13,7 +13,7 @@ class DrumStickEdit extends Component {
     drummerName: '',
     date: '',
     city: '',
-    description: '',
+    description: ''
   }
 
   constructor(props) {
@@ -23,11 +23,13 @@ class DrumStickEdit extends Component {
       cities: [],
       descriptions: [],
       messages: {},
-      date: ''
+      date: '',
+      photo: null
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.formatDate = this.formatDate.bind(this)
+    this.onChangeFile = this.onChangeFile.bind(this)
   }
 
   async componentDidMount() {
@@ -101,7 +103,7 @@ class DrumStickEdit extends Component {
   async handleSubmit(event, errors) {
     if (errors.length === 0) {
       event.preventDefault()
-      const { item } = this.state
+      const { item, photo } = this.state
       await fetch('/api/drumstick', {
         method: (item.id) ? 'PUT' : 'POST',
         headers: {
@@ -110,6 +112,15 @@ class DrumStickEdit extends Component {
         },
         body: JSON.stringify(item),
       })
+      if (photo !== null){
+        const formData = new FormData()
+        formData.append('photo', photo)
+        formData.append('drumstickId', item.id)
+        await fetch(`/api/drumstick/uploadPhoto`, {
+          method: 'POST',
+          body: formData
+        })
+      }
       this.props.history.push('/drumsticks')
     }
   }
@@ -118,6 +129,11 @@ class DrumStickEdit extends Component {
     let strings = date.split('-')
     return strings[2] + '.' + strings[1] + '.' + strings[0]
   }
+
+  onChangeFile(e) {
+    const { files } = e.target
+    this.setState({photo: files[0]})
+  } 
 
   render() {
     const { item, cities, descriptions, date, messages } = this.state
@@ -133,6 +149,9 @@ class DrumStickEdit extends Component {
     let optionDescriptionItems = descriptions.map((description) =>
       <option key={description.id} value={description.drumStickTypeEnum}>{description.name}</option>
     )
+
+    let link = "http://localhost:8090" + item.linkToPhoto //for localhost
+    // let link = "http://api:8085" + item.linkToPhoto //for Docker
 
     return <div>
       <AppNavbar />
@@ -191,6 +210,18 @@ class DrumStickEdit extends Component {
               </AvField>
             </AvGroup>
           </div>
+          <Label for="upload">
+            <FormattedMessage id="DrumStickEdit.addPhoto" defaultMessage="Add Photo:" />
+          </Label>
+          <Input type="file" name="upload" onChange={this.onChangeFile} />
+          <br/>
+          {item.linkToPhoto !== null ? (
+            <Label for="upload"><FormattedMessage id="DrumStickEdit.photo" defaultMessage="Photo:" /></Label>
+          ) : ("")}
+          {item.linkToPhoto !== null ? (
+            <Card style={{ width: '18rem' }}><CardImg src={link} ></CardImg></Card>
+          ) : ("")}
+          <br/>
           <FormGroup>
             <Button color="primary" type="submit">
               <FormattedMessage id="DrumStickEdit.save" defaultMessage="Save" />
