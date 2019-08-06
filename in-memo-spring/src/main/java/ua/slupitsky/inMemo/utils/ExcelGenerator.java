@@ -155,6 +155,7 @@ public class ExcelGenerator {
         sheet.setDefaultColumnWidth(30);
         sheet.setColumnWidth(ExcelColumnDrumStick.NUMBER, 1200);
         sheet.setColumnWidth(ExcelColumnDrumStick.DATE, 3000);
+        sheet.setColumnWidth(ExcelColumnDrumStick.LINK_TO_PHOTO, 20000);
 
         Row header = sheet.createRow(0);
         header.createCell(ExcelColumnDrumStick.NUMBER).setCellValue("№");

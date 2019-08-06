@@ -112,14 +112,16 @@ class DrumStickEdit extends Component {
         },
         body: JSON.stringify(item),
       })
-      if (photo !== null){
-        const formData = new FormData()
-        formData.append('photo', photo)
-        formData.append('drumstickId', item.id)
-        await fetch(`/api/drumstick/uploadPhoto`, {
-          method: 'POST',
-          body: formData
-        })
+      if (item.id !== undefined){
+        if (photo !== null){
+          const formData = new FormData()
+          formData.append('photo', photo)
+          formData.append('drumstickId', item.id)
+          await fetch(`/api/drumstick/uploadPhoto`, {
+            method: 'POST',
+            body: formData
+          })
+        }
       }
       this.props.history.push('/drumsticks')
     }
@@ -210,18 +212,26 @@ class DrumStickEdit extends Component {
               </AvField>
             </AvGroup>
           </div>
-          <Label for="upload">
-            <FormattedMessage id="DrumStickEdit.addPhoto" defaultMessage="Add Photo:" />
-          </Label>
-          <Input type="file" name="upload" onChange={this.onChangeFile} />
-          <br/>
-          {item.linkToPhoto !== null ? (
-            <Label for="upload"><FormattedMessage id="DrumStickEdit.photo" defaultMessage="Photo:" /></Label>
+          {item.id !== undefined && item.linkToPhoto === null ? (
+            <div>
+              <Label for="upload">
+                <FormattedMessage id="DrumStickEdit.addPhoto" defaultMessage="Add Photo:" />
+              </Label>
+              <Input type="file" name="upload" onChange={this.onChangeFile} />
+              <br/>
+            </div>
           ) : ("")}
-          {item.linkToPhoto !== null ? (
-            <Card style={{ width: '18rem' }}><CardImg src={link} ></CardImg></Card>
+          {item.id !== undefined && item.linkToPhoto !== null ? (
+            <div>
+              <Label for="upload">
+                <FormattedMessage id="DrumStickEdit.photo" defaultMessage="Photo:" />
+              </Label>
+              <Card style={{ width: '18rem' }}>
+                <CardImg src={link} ></CardImg>
+              </Card>
+              <br/>
+            </div>
           ) : ("")}
-          <br/>
           <FormGroup>
             <Button color="primary" type="submit">
               <FormattedMessage id="DrumStickEdit.save" defaultMessage="Save" />
