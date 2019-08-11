@@ -12,6 +12,7 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -84,6 +85,11 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+        String rootPath = System.getProperty("catalina.home");
+        String imagePath = "file:" + rootPath + File.separator + "images/";
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations(imagePath);
+        log.info("Resource handlers added");
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
 

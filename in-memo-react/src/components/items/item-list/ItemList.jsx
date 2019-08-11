@@ -1,16 +1,12 @@
 import React, { Component } from 'react'
 import { Container, Table } from 'reactstrap'
 import AppNavbar from '../../common/AppNavbar'
-import DrumStickItem from '../DrumStickItem'
-import CDItem from '../CDItem'
+import DrumStickItem from '../DrumStickItem.jsx'
+import CDItem from '../CDItem.jsx'
 import { FormattedMessage } from 'react-intl'
 import ButtonsPanelContainer from '../../common/buttons-panel/ButtonsPanelContainer'
 
 export default class ItemList extends Component {
-
-    constructor(props) {
-        super(props)
-    }
 
     componentDidMount() {
         const { service, getURL, fetchData } = this.props

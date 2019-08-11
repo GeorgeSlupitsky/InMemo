@@ -5,8 +5,8 @@ import withService from './../../../hoc/withService'
 import ItemList from './ItemList'
 import {
     fetchData,
-    clearData,
     removeItem,
+    clearData,
     addItemToArray
 } from '../../../store/items/item-list/actions'
 
@@ -21,8 +21,8 @@ class ItemListContainer extends Component {
             isLoading,
             checkedIds,
             fetchData,
-            clearData,
             removeItem,
+            clearData,
             addItemToArray,
             localizedMessages
         } = this.props
@@ -36,8 +36,8 @@ class ItemListContainer extends Component {
             isLoading={isLoading}
             checkedIds={checkedIds}
             fetchData={fetchData}
-            clearData={clearData}
             removeItem={removeItem}
+            clearData={clearData}
             addItemToArray={addItemToArray}
             localizedMessages={localizedMessages}
         />
@@ -54,8 +54,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
     fetchData,
-    clearData,
     removeItem,
+    clearData,
     addItemToArray
 }
 

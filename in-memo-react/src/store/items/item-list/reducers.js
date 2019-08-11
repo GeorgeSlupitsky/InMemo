@@ -1,7 +1,8 @@
 import {
-    FETCH_DATA,
-    CLEAR_DATA,
+    FETCH_DATA_SUCCESS,
+    FETCH_DATA_ERROR,
     REMOVE_ITEM,
+    CLEAR_DATA,
     ADD_ITEM_TO_ARRAY
 } from './actions'
 
@@ -14,18 +15,15 @@ const initialState = {
 export const itemListReducer = (state = initialState, action) => {
     const { data } = state
     switch (action.type) {
-        case FETCH_DATA:
+        case FETCH_DATA_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 data: action.payload
             }
-        case CLEAR_DATA:
+        case FETCH_DATA_ERROR:
             return {
-                ...state,
-                isLoading: true,
-                checkedIds: [],
-                data: []
+                ...state
             }
         case REMOVE_ITEM:
             const itemId = action.payload
@@ -33,6 +31,13 @@ export const itemListReducer = (state = initialState, action) => {
             return {
                 ...state,
                 data: updatedData
+            }
+        case CLEAR_DATA:
+            return {
+                ...state,
+                isLoading: true,
+                data: [],
+                checkedIds: []
             }
         case ADD_ITEM_TO_ARRAY:
             const id = action.payload

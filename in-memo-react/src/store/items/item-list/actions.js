@@ -1,6 +1,7 @@
-export const FETCH_DATA = 'FETCH_DATA'
-export const CLEAR_DATA = 'CLEAR_DATA'
+export const FETCH_DATA_SUCCESS = 'FETCH_DATA_SUCCESS'
+export const FETCH_DATA_ERROR = 'FETCH_DATA_ERROR'
 export const REMOVE_ITEM = 'REMOVE_ITEM'
+export const CLEAR_DATA = 'CLEAR_DATA'
 export const ADD_ITEM_TO_ARRAY = 'ADD_ITEM_TO_ARRAY'
 
 const fetchData = (service, getUrl) => {
@@ -8,16 +9,17 @@ const fetchData = (service, getUrl) => {
         service.fetchData(getUrl)
             .then(response => {
                 dispatch({
-                    type: FETCH_DATA,
+                    type: FETCH_DATA_SUCCESS,
                     payload: response.data
                 })
             })
-    }
-}
-
-const clearData = () => {
-    return {
-        type: CLEAR_DATA
+            .catch((err) => {
+                console.log(err)
+                dispatch({
+                    type: FETCH_DATA_ERROR,
+                    payload: 'error'
+                })
+            })
     }
 }
 
@@ -33,6 +35,12 @@ const removeItem = (service, deleteURL, id) => {
     }
 }
 
+const clearData = () => {
+    return {
+        type: CLEAR_DATA
+    }
+}
+
 const addItemToArray = (id) => {
     return {
         type: ADD_ITEM_TO_ARRAY,
@@ -42,7 +50,7 @@ const addItemToArray = (id) => {
 
 export {
     fetchData,
-    clearData,
     removeItem,
+    clearData,
     addItemToArray
 }

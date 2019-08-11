@@ -24,6 +24,7 @@
         "CDEdit.year": "Year",
         "CDEdit.bandMembers": "Band Members",
         "CDEdit.discogsLink": "Link to Discogs",
+        "CDEdit.autograph": "Autograph",
         "CDEdit.save": "Save",
         "CDEdit.cancel": "Cancel",
 
@@ -87,6 +88,7 @@
         "CDEdit.year": "Año",
         "CDEdit.bandMembers": "Miembros de la banda",
         "CDEdit.discogsLink": "Enlace a Discogs",
+        "CDEdit.autograph": "Autógrafo",
         "CDEdit.save": "Salvar",
         "CDEdit.cancel": "Cancelar",
 
@@ -150,6 +152,7 @@
         "CDEdit.year": "Год",
         "CDEdit.bandMembers": "Учасники группы",
         "CDEdit.discogsLink": "Ссылка на Discogs",
+        "CDEdit.autograph": "Автограф",
         "CDEdit.save": "Сохранить",
         "CDEdit.cancel": "Отменить",
 
@@ -213,6 +216,7 @@
         "CDEdit.year": "Рік",
         "CDEdit.bandMembers": "Учасники гурта",
         "CDEdit.discogsLink": "Посилання на Discogs",
+        "CDEdit.autograph": "Автограф",
         "CDEdit.save": "Зберегти",
         "CDEdit.cancel": "Відмінити",
 
@@ -276,6 +280,7 @@
         "CDEdit.year": "年",
         "CDEdit.bandMembers": "バンドのメンバー",
         "CDEdit.discogsLink": "Discogsへのリンク",
+        "CDEdit.autograph": "サイン",
         "CDEdit.save": "保存する",
         "CDEdit.cancel": "キャンセル",
 
