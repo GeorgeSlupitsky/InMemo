@@ -18,6 +18,7 @@ class CDEditContainer extends Component{
         const { service,
             match,
             history,
+            url,
             itemId,
             fetchCDEnumsData,
             fetchDataItem,
@@ -37,6 +38,7 @@ class CDEditContainer extends Component{
             service={service}
             match={match}
             history={history}
+            url={url}
             itemId={itemId}
             fetchCDEnumsData={fetchCDEnumsData}
             fetchDataItem={fetchDataItem}

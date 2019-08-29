@@ -33,9 +33,13 @@ export default class CDEdit extends Component {
     }
 
     async handleSave() {
-        const { service, itemId, item, postPutItem } = this.props
+        const { url, service, itemId, item, postPutItem, bandMember, saveBandMemberToState } = this.props
+        if (bandMember !== "" || bandMember !== undefined){
+            item.band.bandMembers.push(bandMember)
+        }
         await postPutItem(service, '/api/cd/', item, itemId)
-        await this.props.history.push('/cds')
+        saveBandMemberToState('')
+        await this.props.history.push(url)
     }
 
     handleSubmit(event, errors) {
@@ -97,7 +101,7 @@ export default class CDEdit extends Component {
 
     render() {
 
-        const { item, itemId, cdEnums, localizedMessages, isLoadingItem, isLoadingEnums, bandMember } = this.props
+        const { url, item, itemId, cdEnums, localizedMessages, isLoadingItem, isLoadingEnums, bandMember } = this.props
 
         if (itemId !== 'new'){
             if (isLoadingItem || isLoadingEnums) {
@@ -253,7 +257,7 @@ export default class CDEdit extends Component {
                         <Button color="primary">
                             <FormattedMessage id="CDEdit.save" defaultMessage="Save" />
                         </Button>{' '}
-                        <Button color="secondary" tag={Link} href={'/cds'} to={'/cds'}>
+                        <Button color="secondary" tag={Link} href={url} to={url}>
                             <FormattedMessage id="CDEdit.cancel" defaultMessage="Cancel" />
                         </Button>
                     </FormGroup>
