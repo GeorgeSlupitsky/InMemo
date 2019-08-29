@@ -124,7 +124,8 @@ public class PdfView extends AbstractPdfView {
             table.addCell(cell);
             cellCenterAlign.setPhrase(new Phrase(cd.getYear(), fontNormal));
             table.addCell(cellCenterAlign);
-            if (cd.getBooklet().equals(CDBooklet.WITH_OUT) || cd.getBooklet().equals(CDBooklet.DIGIPACK) || cd.getBooklet().equals(CDBooklet.BOX) || cd.getBooklet().equals(CDBooklet.BOOK)){
+            if (cd.getBooklet().equals(CDBooklet.WITH_OUT) || cd.getBooklet().equals(CDBooklet.DIGIPACK) || cd.getBooklet().equals(CDBooklet.BOX)
+                    || cd.getBooklet().equals(CDBooklet.BOOK) || cd.getBooklet().equals(CDBooklet.ECOPACK)){
                 cellCenterAlign.setPhrase(new Phrase(resourceBundle.getString(cd.getBooklet().getName()), fontNormal));
                 table.addCell(cellCenterAlign);
             } else {

@@ -214,11 +214,7 @@ public class ExcelParser {
                                 cd.setBand(cdBand);
                                 break;
                             case ExcelColumnCD.DISCOGS_LINK:
-                                if (cell.getStringCellValue().equals("-")){
-                                    cd.setDiscogsLink(null);
-                                } else {
-                                    cd.setDiscogsLink(cell.getStringCellValue());
-                                }
+                                cd.setDiscogsLink(cell.getStringCellValue());
                                 break;
                             case ExcelColumnCD.AUTOGRAPH:
                                 if (cell.getStringCellValue().equals("+")){

@@ -78,13 +78,6 @@ public class CDController {
     @PostMapping(value = "/cd")
     public ResponseEntity<String> saveCD (@Valid @RequestBody CD cd){
         cd.setId(nextSequenceService.getNextSequence("cds"));
-        if (cd.getBand().getOrder() == CDBandOrder.MAIN){
-            List <CD> cds = cdService.findCDsByBand_Name(cd.getBand().getName());
-            if (cds != null && !cds.isEmpty()){
-                cd.setIndexWeight(cds.get(0).getIndexWeight());
-            }
-            //TODO count weight index if getOrder == 2 or if cds isEmpty()
-        }
         cdService.addCD(cd);
         log.info("CD " + cd.getBand().getName() + " - " + cd.getAlbum() + " added");
         return new ResponseEntity<>("CD saved successfully", HttpStatus.OK);

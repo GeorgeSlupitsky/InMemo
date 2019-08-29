@@ -11,14 +11,13 @@ import ua.slupitsky.inMemo.models.enums.ExportType;
 import ua.slupitsky.inMemo.models.enums.Extentions;
 import ua.slupitsky.inMemo.models.mongo.CD;
 import ua.slupitsky.inMemo.models.mongo.DrumStick;
+import ua.slupitsky.inMemo.sorting.CDComparator;
+import ua.slupitsky.inMemo.sorting.SortingUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ExcelGenerator {
 
@@ -74,7 +73,7 @@ public class ExcelGenerator {
         sheet.setColumnWidth(ExcelColumnCD.YEAR, 3000);
         sheet.setColumnWidth(ExcelColumnCD.NOTE, 5500);
         sheet.setColumnWidth(ExcelColumnCD.MEMBERS, 15000);
-        sheet.setColumnWidth(ExcelColumnCD.DISCOGS_LINK, 15000);
+        sheet.setColumnWidth(ExcelColumnCD.DISCOGS_LINK, 18000);
         sheet.setColumnWidth(ExcelColumnCD.AUTOGRAPH, 1200);
 
         Row header = sheet.createRow(0);
@@ -101,8 +100,11 @@ public class ExcelGenerator {
         header.createCell(ExcelColumnCD.AUTOGRAPH).setCellValue("@");
         header.getCell(ExcelColumnCD.AUTOGRAPH).setCellStyle(style);
 
-
         int rowCount = 1;
+
+        SortingUtils.clearWeight(cds);
+        SortingUtils.setWeightForSorting(cds);
+        cds.sort(new CDComparator());
 
         for(CD cd : cds){
             Row cdRow =  sheet.createRow(rowCount++);
@@ -116,7 +118,8 @@ public class ExcelGenerator {
             cdRow.createCell(ExcelColumnCD.BAND).setCellValue(cd.getBand().getName());
             cdRow.createCell(ExcelColumnCD.ALBUM).setCellValue(cd.getAlbum());
             cdRow.createCell(ExcelColumnCD.YEAR).setCellValue(cd.getYear());
-            if (cd.getBooklet().equals(CDBooklet.WITH_OUT) || cd.getBooklet().equals(CDBooklet.DIGIPACK) || cd.getBooklet().equals(CDBooklet.BOX) || cd.getBooklet().equals(CDBooklet.BOOK)){
+            if (cd.getBooklet().equals(CDBooklet.WITH_OUT) || cd.getBooklet().equals(CDBooklet.DIGIPACK) || cd.getBooklet().equals(CDBooklet.BOX)
+                    || cd.getBooklet().equals(CDBooklet.BOOK) || cd.getBooklet().equals(CDBooklet.ECOPACK)){
                 cdRow.createCell(ExcelColumnCD.BOOKLET).setCellValue(resourceBundle.getString(cd.getBooklet().getName()));
             } else {
                 cdRow.createCell(ExcelColumnCD.BOOKLET).setCellValue(cd.getBooklet().getQuantityOfPages() + " " + resourceBundle.getString(cd.getBooklet().getName()));

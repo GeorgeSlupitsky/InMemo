@@ -12,7 +12,8 @@ public enum CDCountry {
     AUSTRALIA("cd.country.australia"),
     GERMANY("cd.country.germany"),
     JAPAN("cd.country.japan"),
-    NETHERLAND("cd.country.netherlands");
+    NETHERLAND("cd.country.netherlands"),
+    BELATUS("cd.country.belarus");
 
     private String name;
 

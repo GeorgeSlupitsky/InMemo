@@ -2,6 +2,7 @@ package ua.slupitsky.inMemo.sorting;
 
 import ua.slupitsky.inMemo.models.enums.CDBandOrder;
 import ua.slupitsky.inMemo.models.enums.CDGroup;
+import ua.slupitsky.inMemo.models.enums.CDType;
 import ua.slupitsky.inMemo.models.mongo.CD;
 import ua.slupitsky.inMemo.models.mongo.CDBandMainMember;
 
@@ -39,6 +40,12 @@ public class SortingUtils {
         setWeightToCDs(cdMap, cdWithSecondaryOrderForeign);
         setWeightToCDs(cdMap, cdWithSecondaryOrderDomestic);
 
+    }
+
+    public static void clearWeight(List<CD> cdList){
+        for (CD cd: cdList){
+            cd.setIndexWeight(null);
+        }
     }
 
     private static void setWeightToCDs(Map<String, List<CD>> cdMap, List<CD> cdWithSecondaryOrder){
