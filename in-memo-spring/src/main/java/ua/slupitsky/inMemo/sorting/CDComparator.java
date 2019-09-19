@@ -35,7 +35,7 @@ public class CDComparator implements Comparator<CD> {
     private int getCompareIndexForCDType(CD cd) {
         if (cd.getCdType().equals(CDType.NUMBER) || cd.getCdType().equals(CDType.NOT_NUMBER)
             || cd.getCdType().equals(CDType.SINGLE) || cd.getCdType().equals(CDType.MAXI_SINGLE)
-            || cd.getCdType().equals(CDType.NUMBER_AND_LIVE)){
+            || cd.getCdType().equals(CDType.NUMBER_AND_LIVE) || cd.getCdType().equals(CDType.MINI_ALBUM)){
             return 1;
         } else if (cd.getCdType().equals(CDType.LIVE)){
             return 2;
