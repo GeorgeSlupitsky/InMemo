@@ -14,7 +14,7 @@ public class DrumStickComparator implements Comparator<DrumStick> {
             }
             return o1.getDate().compareTo(o2.getDate());
         }
-        return o1.getBand().compareTo(o2.getBand());
+        return o1.getBand().toLowerCase().compareTo(o2.getBand().toLowerCase());
     }
 
 }

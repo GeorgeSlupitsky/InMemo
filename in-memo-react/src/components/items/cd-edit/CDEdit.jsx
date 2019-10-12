@@ -34,11 +34,11 @@ export default class CDEdit extends Component {
 
     async handleSave() {
         const { url, service, itemId, item, postPutItem, bandMember, saveBandMemberToState } = this.props
-        if (bandMember !== "" || bandMember !== undefined){
-            item.band.bandMembers.push(bandMember)
-        }
+        // if (bandMember !== "" || bandMember !== undefined){
+        //     item.band.bandMembers.push(bandMember)
+        // }
         await postPutItem(service, '/api/cd/', item, itemId)
-        saveBandMemberToState('')
+        // saveBandMemberToState('')
         await this.props.history.push(url)
     }
 

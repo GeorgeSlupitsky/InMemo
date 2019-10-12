@@ -16,22 +16,22 @@ public class SortingUtils {
 
         List<CD> cdWithMainOrderForeign = cdList.stream()
                 .filter(cd -> cd.getBand().getOrder().equals(CDBandOrder.MAIN) && cd.getCdGroup().equals(CDGroup.FOREIGN))
-                .sorted(Comparator.comparing(cd -> cd.getBand().getName()))
+                .sorted(Comparator.comparing(cd -> cd.getBand().getName().toLowerCase()))
                 .collect(Collectors.toList());
 
         List<CD> cdWithMainOrderDomestic = cdList.stream()
                 .filter(cd -> cd.getBand().getOrder().equals(CDBandOrder.MAIN) && cd.getCdGroup().equals(CDGroup.DOMESTIC))
-                .sorted(Comparator.comparing(cd -> cd.getBand().getName()))
+                .sorted(Comparator.comparing(cd -> cd.getBand().getName().toLowerCase()))
                 .collect(Collectors.toList());
 
         List<CD> cdWithSecondaryOrderForeign = cdList.stream()
                 .filter(cd -> cd.getBand().getOrder().equals(CDBandOrder.SECONDARY) && cd.getCdGroup().equals(CDGroup.FOREIGN))
-                .sorted(Comparator.comparing(cd -> cd.getBand().getName()))
+                .sorted(Comparator.comparing(cd -> cd.getBand().getName().toLowerCase()))
                 .collect(Collectors.toList());
 
         List<CD> cdWithSecondaryOrderDomestic = cdList.stream()
                 .filter(cd -> cd.getBand().getOrder().equals(CDBandOrder.SECONDARY) && cd.getCdGroup().equals(CDGroup.DOMESTIC))
-                .sorted(Comparator.comparing(cd -> cd.getBand().getName()))
+                .sorted(Comparator.comparing(cd -> cd.getBand().getName().toLowerCase()))
                 .collect(Collectors.toList());
 
         fillMapForMainOrder(cdWithMainOrderForeign, cdMap);
@@ -48,6 +48,7 @@ public class SortingUtils {
         }
     }
 
+
     private static void setWeightToCDs(Map<String, List<CD>> cdMap, List<CD> cdWithSecondaryOrder){
         int index = 1;
         for (String key: cdMap.keySet()){
@@ -60,6 +61,8 @@ public class SortingUtils {
                         for (CD cdSecondary: cdWithSecondaryOrder){
                             if (cdSecondary.getBand().getBandMembers().contains(cdBandMainMember)){
                                 cdSecondary.setIndexWeight(index);
+                            } else {
+                                //TODO add exception that this is impossible
                             }
                         }
                     }
