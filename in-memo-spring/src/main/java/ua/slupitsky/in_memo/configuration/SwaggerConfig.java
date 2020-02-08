@@ -1,6 +1,8 @@
 package ua.slupitsky.in_memo.configuration;
 
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -15,7 +17,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static springfox.documentation.builders.PathSelectors.regex;
 
@@ -24,11 +25,11 @@ import static springfox.documentation.builders.PathSelectors.regex;
 public class SwaggerConfig extends WebMvcConfigurationSupport {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static Logger log = Logger.getLogger(SwaggerConfig.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwaggerConfig.class);
 
     @Bean
     public Docket myCollectionsApi(){
-        log.info("Starting Swagger");
+        LOGGER.info("Starting Swagger");
 
         Contact contact = new Contact(
                 "Yehor Slupitskyi",
@@ -59,7 +60,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 
         docket = docket.select().apis(RequestHandlerSelectors.basePackage("ua.slupitsky.in_memo.controllers"))
                 .build();
-        log.info("Swagger started");
+        LOGGER.info("Swagger started");
         return docket;
     }
 
@@ -89,7 +90,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
         String imagePath = "file:" + rootPath + File.separator + "images/";
         registry.addResourceHandler("/images/**")
                 .addResourceLocations(imagePath);
-        log.info("Resource handlers added");
+        LOGGER.info("Resource handlers added");
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
 
