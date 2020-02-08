@@ -57,7 +57,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
                 .securitySchemes(Lists.newArrayList(apiKey()))
                 .useDefaultResponseMessages(false);
 
-        docket = docket.select().apis(RequestHandlerSelectors.basePackage("ua.slupitsky.inmemo.controllers"))
+        docket = docket.select().apis(RequestHandlerSelectors.basePackage("ua.slupitsky.in_memo.controllers"))
                 .build();
         log.info("Swagger started");
         return docket;
@@ -70,7 +70,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     private SecurityContext securityContext() {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
-                .forPaths(regex("ua.slupitsky.inMemo.controllers"))
+                .forPaths(regex("ua.slupitsky.in_memo.controllers"))
                 .build();
     }
 
